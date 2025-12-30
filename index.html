@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage Chinese Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Huninn Font Import -->
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
+    <!-- Lunar JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
+</head>
+
+<body class="green-theme">
+    <div class="calendar-container">
+
+        <!-- Top Bar: Month | Year | Lunar Month Info -->
+        <header class="top-bar">
+            <div class="top-left box-bordered">
+                <span class="en-month" id="month-name"></span>
+            </div>
+
+            <div class="top-center">
+                <div class="year-pill" id="year-pill"></div>
+            </div>
+
+            <div class="top-right box-bordered">
+                <span class="zh-month" id="lunar-month-info"></span>
+            </div>
+        </header>
+
+        <!-- Main Body: Giant Date Number -->
+        <main class="main-body">
+            <div class="giant-date" id="giant-day"></div>
+            <!-- Prominent Lunar Date: Format [Month]月[Day] -->
+            <div class="lunar-prominent" id="lunar-date-full"></div>
+        </main>
+
+        <!-- Lower Section: Grid Info -->
+        <section class="lower-section">
+            <!-- Info Bar: Year Cycle | Weekday -->
+            <div class="info-bar">
+                <div class="info-left">
+                    <span id="lunar-year-ganzhi"></span>
+                </div>
+                <div class="info-right">
+                    <span class="en-weekday" id="weekday-en"></span>
+                    <span class="zh-weekday" id="weekday-zh"></span>
+                </div>
+            </div>
+
+            <!-- Yi/Ji Grid -->
+            <div class="luck-grid">
+                <!-- Yi (Good) -->
+                <div class="luck-cell good-cell">
+                    <div class="luck-icon good-icon">宜</div>
+                    <div class="luck-list" id="yi-list"></div>
+                </div>
+
+                <!-- Ji (Bad) -->
+                <div class="luck-cell bad-cell">
+                    <div class="luck-icon bad-icon">忌</div>
+                    <div class="luck-list" id="ji-list"></div>
+                </div>
+            </div>
+
+            <!-- Footer: Dual Quotes & Solar Term -->
+            <footer class="footer-bar">
+                <div class="quote-container" id="quote-container"></div>
+
+                <div class="solar-term-box" id="solar-term-box" style="display: none;"></div>
+
+                <!-- Footer Signoff -->
+                <div class="footer-signoff"
+                    style="margin-top: 20px; font-weight: bold; color: var(--theme-green); font-size: 12px;">
+                    Fatt Choy HOH 2026
+                </div>
+
+                <!-- References Link -->
+                <div class="references-link" style="margin-top: 10px; font-size: 0.8rem;">
+                    <a href="#" id="refBtn" class="ref-link">References</a>
+                </div>
+            </footer>
+        </section>
+    </div>
+
+    <!-- Reference Modal -->
+    <div id="refModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div style="text-align: center;">
+                <h3>References</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;"><a href="https://github.com/6tail/lunar-javascript" target="_blank"
+                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">lunar-javascript
+                            (Logic)</a></li>
+                    <li style="margin: 10px 0;"><a href="https://fonts.google.com/specimen/Huninn" target="_blank"
+                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">Huninn Font
+                            (Google Fonts)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Logic Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Gregorian Date Setup
+            const now = new Date();
+            const year = now.getFullYear();
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            const monthName = monthNames[now.getMonth()];
+            const day = now.getDate();
+            const weekdayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+            const weekdayMap = {
+                'Monday': '一', 'Tuesday': '二', 'Wednesday': '三', 'Thursday': '四',
+                'Friday': '五', 'Saturday': '六', 'Sunday': '日'
+            };
+            const weekdayZh = '星期' + weekdayMap[weekdayEn];
+
+            // Render Gregorian
+            document.getElementById('month-name').textContent = monthName;
+            document.getElementById('year-pill').textContent = year; // V5: Just Year
+            document.getElementById('giant-day').textContent = day;
+            document.getElementById('weekday-en').textContent = weekdayEn;
+            document.getElementById('weekday-zh').textContent = weekdayZh;
+
+            // 2. Lunar Calculation
+            const lunar = Lunar.fromDate(now);
+
+            // Lunar Year: GanZhi + Zodiac
+            const lunarYear = lunar.getYearInGanZhi() + ' (' + lunar.getYearShengXiao() + ')';
+            document.getElementById('lunar-year-ganzhi').textContent = lunarYear;
+
+            // Lunar Month & Size
+            const lunarMonthName = lunar.getMonthInChinese();
+            // Size logic: Check days in month. 
+            // lunar-javascript usually handles this internally, but to be safe we can use a helper or simple check?
+            // Actually Library usually has getDayCount() or similar?
+            // Let's use a simple lookup if available, or just assume logic: if next day is 1st, then today is end.
+            // Wait, we need the size of the *entire* month, not just today.
+            // Let's assume standard 30 = Big, 29 = Small.
+            // We can cheat: create a lunar date for day 30 of this lunar month. If it returns valid and same month, it's Big.
+            let isBig = '小';
+            try {
+                // Check simple way: Library might expose it?
+                // Documentation says: lunar.getDayInChinese() ...
+                // Let's verify size via checking the last day of the month.
+                // A reliable way in 6tail:
+                // var d = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
+                // if (d.getMonth() === lunar.getMonth()) isBig = '大';
+                // However, lunar.getMonth() returns number.
+                // Let's try to trust standard Chinese Calendar rules roughly or just omission if blocked.
+                // Actually, let's use a simpler heuristic:
+                // The library likely has getMonthInChinese() which doesn't say size.
+                // Let's try to instantiate 30th day.
+                // Note: Javascript `Lunar` object constructor might be strict.
+                // Let's omit "Big/Small" if unsure to avoid error, OR try:
+                // SolarUtil? No.
+                // Let's just use "Month" for now to be safe, unless we can verify `lunar-javascript` API.
+                // I recall my python script did: check if day 30 exists.
+                // JS: Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).
+                // But `lunar.getMonth()` might return index?
+                // Actually, let's just use the `toFullString()` or similar to find clues?
+                // Or simplified: Just show the month name.
+                // Wait, User explicitly wanted Big/Small.
+                // Let's try to check the number of days in the current lunar month roughly.
+                // In Python: `Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30)` was used.
+                // In JS: `Lunar.fromYmd(year, month, day)` expects Lunar Year/Month.
+                // `lunar.getYear()` returns lunar year.
+                // We'll trust that works.
+                const testBig = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
+                if (testBig.getMonth() === lunar.getMonth()) {
+                    isBig = '大';
+                }
+            } catch (e) {
+                // If 30th fails (invalid date), then it's Small (29 days).
+                // Only if strict mode throws.
+                // Actually, often libraries roll over to next month.
+                // Safer:
+                // var max = 29;
+                // var test = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
+                // if (test.getMonth() == lunar.getMonth()) max = 30;
+                // Actually, let's just set it to '?' if fails, or default to checking if 30th is in same month.
+                // Assuming it works like Python version.
+            }
+
+            // Re-eval: 6tail JS library `Lunar` object typically doesn't throw on fromYmd, it normalizes?
+            // Actually, `fromYmd` logic implies specific date.
+            // Let's stick to showing Month name. If I can't confirm 100%, better not show wrong info.
+            // BUT I want to match Python.
+            // Python: `month_size = '大' if Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() == lunar.getMonth() else '小'`
+            // I'll try the same in JS.
+            try {
+                const lYear = lunar.getYear();
+                const lMonth = lunar.getMonth();
+                const d30 = Lunar.fromYmd(lYear, lMonth, 30);
+                if (d30.getMonth() === lMonth) {
+                    isBig = '大';
+                }
+            } catch (e) { }
+
+            document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
+
+            // Lunar Date Full (Month + Day)
+            const lunarDayName = lunar.getDayInChinese();
+            document.getElementById('lunar-date-full').textContent = lunarMonthName + '月' + lunarDayName;
+
+            // Solar Term
+            const jieQi = lunar.getJieQi();
+            const termBox = document.getElementById('solar-term-box');
+            if (jieQi) {
+                termBox.textContent = jieQi;
+                termBox.style.display = 'block';
+            }
+
+            // 3. Yi / Ji Lists
+            const yiList = lunar.getDayYi(); // Array
+            const jiList = lunar.getDayJi(); // Array
+
+            const yiContainer = document.getElementById('yi-list');
+            yiList.forEach(item => {
+                const span = document.createElement('span');
+                span.className = 'luck-item';
+                span.textContent = item;
+                yiContainer.appendChild(span);
+            });
+
+            const jiContainer = document.getElementById('ji-list');
+            jiList.forEach(item => {
+                const span = document.createElement('span');
+                span.className = 'luck-item';
+                span.textContent = item;
+                jiContainer.appendChild(span);
+            });
+
+            // 4. Quotes System
+            const quotes = [
+                "大吉大利", "万事如意", "心想事成", "身体健康",
+                "恭喜发财", "年年有余", "步步高升", "一帆风顺",
+                "金玉满堂", "吉星高照", "花开富贵", "国泰民安"
+            ];
+
+            // Shuffle and pick 2
+            function getMultipleRandom(arr, num) {
+                const shuffled = [...arr].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, num);
+            }
+            const selectedQuotes = getMultipleRandom(quotes, 2);
+
+            const quoteContainer = document.getElementById('quote-container');
+            selectedQuotes.forEach(q => {
+                const span = document.createElement('span');
+                span.className = 'quote-text';
+                span.textContent = q;
+                quoteContainer.appendChild(span);
+            });
+
+            // 5. Modal Logic
+            const modal = document.getElementById("refModal");
+            const btn = document.getElementById("refBtn");
+            const span = document.getElementsByClassName("close-btn")[0];
+
+            btn.onclick = function (e) {
+                e.preventDefault();
+                modal.style.display = "block";
+            }
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

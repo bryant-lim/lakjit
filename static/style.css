@@ -1,0 +1,344 @@
+:root {
+    --bg-white: #ffffff;
+    --theme-green: #006400;
+    /* Dark Green */
+    --theme-green-light: #228B22;
+    /* Forest Green */
+    --ink-black: #2b2b2b;
+    --white: #ffffff;
+    --border-color: #006400;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #e0e0e0;
+    font-family: 'Huninn', sans-serif;
+    /* Global Font Change */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* "Thick Calendar" Look: White bg + Strong Shadows */
+.calendar-container {
+    background-color: var(--bg-white);
+    width: 100%;
+    max-width: 500px;
+    border: 3px solid var(--theme-green);
+    padding: 25px;
+
+    /* Layered shadows to create "thick block" 3D effect */
+    box-shadow:
+        1px 1px 0 #ccc,
+        2px 2px 0 #ccc,
+        3px 3px 0 #ccc,
+        4px 4px 0 #ccc,
+        5px 5px 0 #ccc,
+        6px 6px 0 #ccc,
+        7px 7px 0 #ccc,
+        8px 8px 20px rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* --- Top Bar --- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 4px double var(--theme-green);
+    border-bottom: 4px double var(--theme-green);
+    padding: 15px 0;
+    margin-bottom: 20px;
+}
+
+/* Reduced size to fit */
+.box-bordered {
+    border: 2px solid var(--theme-green);
+    padding: 5px 10px;
+    color: var(--theme-green);
+    font-weight: normal;
+    font-size: 1.4rem;
+    min-width: 90px;
+    text-align: center;
+    position: relative;
+    font-family: 'Huninn', sans-serif;
+}
+
+.year-pill {
+    background-color: var(--theme-green);
+    color: var(--white);
+    padding: 5px 30px;
+    border-radius: 25px;
+    font-size: 1.6rem;
+    font-weight: normal;
+    font-family: 'Huninn', sans-serif;
+}
+
+/* --- Main Body --- */
+.main-body {
+    text-align: center;
+    padding: 10px 0;
+    flex-grow: 1;
+}
+
+.giant-date {
+    font-size: 11rem;
+    line-height: 1;
+    color: var(--theme-green);
+    font-weight: normal;
+    font-family: 'Huninn', sans-serif;
+    margin-bottom: 15px;
+}
+
+.lunar-prominent {
+    font-size: 2.2rem;
+    font-family: 'Huninn', sans-serif;
+    color: var(--theme-green);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+/* --- Lower Section --- */
+.lower-section {
+    border: 2px solid var(--theme-green);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Info Bar */
+.info-bar {
+    background-color: var(--theme-green);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    font-family: 'Huninn', sans-serif;
+    font-weight: normal;
+}
+
+.en-weekday {
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+/* Luck Grid */
+.luck-grid {
+    display: flex;
+    border-bottom: 2px solid var(--theme-green);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.luck-cell {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow: hidden;
+    min-height: 120px;
+}
+
+.good-cell {
+    border-right: 2px solid var(--theme-green);
+}
+
+.luck-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Huninn', sans-serif;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 5px;
+    background-color: var(--theme-green);
+}
+
+.luck-list {
+    display: grid;
+    /* Changed to Grid */
+    grid-template-columns: 1fr 1fr;
+    /* 2 Columns */
+    gap: 5px 10px;
+    /* Row Gap 5px, Col Gap 10px */
+    font-size: 0.9rem;
+    color: var(--theme-green);
+    font-weight: normal;
+    align-items: flex-start;
+    width: 100%;
+    /* Ensure full width for grid */
+}
+
+/* Footer Bar */
+.footer-bar {
+    padding: 15px;
+    background-color: var(--bg-white);
+    border-top: 2px solid var(--theme-green);
+    color: var(--theme-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.quote-container {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* Wrap for mobile */
+}
+
+.quote-text {
+    font-family: 'Huninn', sans-serif;
+    font-size: 1.6rem;
+    font-weight: normal;
+}
+
+.solar-term-box {
+    margin-top: 0;
+    border: 1px solid var(--theme-green);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--theme-green);
+    font-weight: normal;
+}
+
+/* --- Reference Modal --- */
+.ref-link {
+    color: var(--theme-green);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 3px solid var(--theme-green);
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+    color: var(--theme-green);
+    font-family: 'Huninn', sans-serif;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    border-bottom: 2px solid var(--theme-green);
+    padding-bottom: 10px;
+}
+
+.modal-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.modal-content li {
+    margin: 10px 0;
+}
+
+.modal-content a {
+    color: var(--theme-green);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.modal-content a:hover {
+    text-decoration: underline;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .calendar-container {
+        padding: 15px;
+        border-width: 2px;
+    }
+
+    .giant-date {
+        font-size: 7rem;
+        /* Smaller date */
+    }
+
+    .lunar-prominent {
+        font-size: 1.6rem;
+    }
+
+    .box-bordered {
+        font-size: 1.1rem;
+        min-width: 60px;
+        padding: 3px 6px;
+    }
+
+    .year-pill {
+        font-size: 1.2rem;
+        padding: 5px 15px;
+    }
+
+    .quote-text {
+        font-size: 1.2rem;
+    }
+
+    .luck-list {
+        font-size: 0.8rem;
+        gap: 2px 5px;
+    }
+
+    .luck-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 1rem;
+    }
+
+    .quote-container {
+        gap: 15px;
+    }
+}
