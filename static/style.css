@@ -251,7 +251,8 @@ body {
 @media (max-width: 600px) {
     body {
         /* Add padding to body so container doesn't touch edges */
-        padding: 10px;
+        /* Increased left/right padding as requested */
+        padding: 10px 25px;
         box-sizing: border-box;
     }
 
