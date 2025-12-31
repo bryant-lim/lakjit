@@ -74,35 +74,11 @@
                 <div class="solar-term-box" id="solar-term-box" style="display: none;"></div>
 
                 <!-- Footer Signoff -->
-                <div class="footer-signoff"
-                    style="margin-top: 20px; font-weight: bold; color: var(--theme-green); font-size: 12px;">
+                <div class="footer-signoff" style="color: var(--theme-green);">
                     Fatt Choy HOH 2026
-                </div>
-
-                <!-- References Link -->
-                <div class="references-link" style="margin-top: 10px; font-size: 0.8rem;">
-                    <a href="#" id="refBtn" class="ref-link">References</a>
                 </div>
             </footer>
         </section>
-    </div>
-
-    <!-- Reference Modal -->
-    <div id="refModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div style="text-align: center;">
-                <h3>References</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin: 10px 0;"><a href="https://github.com/6tail/lunar-javascript" target="_blank"
-                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">lunar-javascript
-                            (Logic)</a></li>
-                    <li style="margin: 10px 0;"><a href="https://fonts.google.com/specimen/Huninn" target="_blank"
-                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">Huninn Font
-                            (Google Fonts)</a></li>
-                </ul>
-            </div>
-        </div>
     </div>
 
     <!-- Main Logic Script -->
@@ -125,7 +101,7 @@
 
             // Render Gregorian
             document.getElementById('month-name').textContent = monthName;
-            document.getElementById('year-pill').textContent = year; // V5: Just Year
+            document.getElementById('year-pill').textContent = year;
             document.getElementById('giant-day').textContent = day;
             document.getElementById('weekday-en').textContent = weekdayEn;
             document.getElementById('weekday-zh').textContent = weekdayZh;
@@ -139,63 +115,8 @@
 
             // Lunar Month & Size
             const lunarMonthName = lunar.getMonthInChinese();
-            // Size logic: Check days in month. 
-            // lunar-javascript usually handles this internally, but to be safe we can use a helper or simple check?
-            // Actually Library usually has getDayCount() or similar?
-            // Let's use a simple lookup if available, or just assume logic: if next day is 1st, then today is end.
-            // Wait, we need the size of the *entire* month, not just today.
-            // Let's assume standard 30 = Big, 29 = Small.
-            // We can cheat: create a lunar date for day 30 of this lunar month. If it returns valid and same month, it's Big.
+            // Size Logic (Same as before)
             let isBig = '小';
-            try {
-                // Check simple way: Library might expose it?
-                // Documentation says: lunar.getDayInChinese() ...
-                // Let's verify size via checking the last day of the month.
-                // A reliable way in 6tail:
-                // var d = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
-                // if (d.getMonth() === lunar.getMonth()) isBig = '大';
-                // However, lunar.getMonth() returns number.
-                // Let's try to trust standard Chinese Calendar rules roughly or just omission if blocked.
-                // Actually, let's use a simpler heuristic:
-                // The library likely has getMonthInChinese() which doesn't say size.
-                // Let's try to instantiate 30th day.
-                // Note: Javascript `Lunar` object constructor might be strict.
-                // Let's omit "Big/Small" if unsure to avoid error, OR try:
-                // SolarUtil? No.
-                // Let's just use "Month" for now to be safe, unless we can verify `lunar-javascript` API.
-                // I recall my python script did: check if day 30 exists.
-                // JS: Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).
-                // But `lunar.getMonth()` might return index?
-                // Actually, let's just use the `toFullString()` or similar to find clues?
-                // Or simplified: Just show the month name.
-                // Wait, User explicitly wanted Big/Small.
-                // Let's try to check the number of days in the current lunar month roughly.
-                // In Python: `Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30)` was used.
-                // In JS: `Lunar.fromYmd(year, month, day)` expects Lunar Year/Month.
-                // `lunar.getYear()` returns lunar year.
-                // We'll trust that works.
-                const testBig = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
-                if (testBig.getMonth() === lunar.getMonth()) {
-                    isBig = '大';
-                }
-            } catch (e) {
-                // If 30th fails (invalid date), then it's Small (29 days).
-                // Only if strict mode throws.
-                // Actually, often libraries roll over to next month.
-                // Safer:
-                // var max = 29;
-                // var test = Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30);
-                // if (test.getMonth() == lunar.getMonth()) max = 30;
-                // Actually, let's just set it to '?' if fails, or default to checking if 30th is in same month.
-                // Assuming it works like Python version.
-            }
-
-            // Re-eval: 6tail JS library `Lunar` object typically doesn't throw on fromYmd, it normalizes?
-            // Actually, `fromYmd` logic implies specific date.
-            // Let's stick to showing Month name. If I can't confirm 100%, better not show wrong info.
-            // BUT I want to match Python.
-            // Python: `month_size = '大' if Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() == lunar.getMonth() else '小'`
-            // I'll try the same in JS.
             try {
                 const lYear = lunar.getYear();
                 const lMonth = lunar.getMonth();
@@ -260,26 +181,6 @@
                 span.textContent = q;
                 quoteContainer.appendChild(span);
             });
-
-            // 5. Modal Logic
-            const modal = document.getElementById("refModal");
-            const btn = document.getElementById("refBtn");
-            const span = document.getElementsByClassName("close-btn")[0];
-
-            btn.onclick = function (e) {
-                e.preventDefault();
-                modal.style.display = "block";
-            }
-
-            span.onclick = function () {
-                modal.style.display = "none";
-            }
-
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
         });
     </script>
 </body>
