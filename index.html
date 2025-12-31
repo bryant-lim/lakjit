@@ -85,8 +85,10 @@
             // 1. Gregorian Date Setup
             const now = new Date();
             const year = now.getFullYear();
-            // Use Numeric Month (1-12)
-            const monthName = now.getMonth() + 1;
+            // Revert to English Month Name
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            const monthName = monthNames[now.getMonth()];
             const day = now.getDate();
             const weekdayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
 
