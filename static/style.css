@@ -4,6 +4,8 @@
     /* Dark Green */
     --theme-green-light: #228B22;
     /* Forest Green */
+    --theme-red: #c92a2a;
+    /* Vintage Red for Bad Luck */
     --ink-black: #2b2b2b;
     --white: #ffffff;
     --border-color: #006400;
@@ -11,25 +13,34 @@
 
 body {
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: #e0e0e0;
     font-family: 'Huninn', sans-serif;
-    /* Global Font Change */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    /* Force full viewport height */
+    width: 100vw;
+    overflow: hidden;
+    /* Disable scrolling */
+    box-sizing: border-box;
 }
 
 /* "Thick Calendar" Look: White bg + Strong Shadows */
 .calendar-container {
     background-color: var(--bg-white);
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
+    /* Increased to 600px */
+    height: 96vh;
+    /* Fit within screen with slight margin */
+    max-height: 850px;
     border: 3px solid var(--theme-green);
-    padding: 25px;
+    padding: 15px 20px;
+    /* Adjusted padding */
 
-    /* Layered shadows to create "thick block" 3D effect */
+    /* Layered shadows */
     box-shadow:
         1px 1px 0 #ccc,
         2px 2px 0 #ccc,
@@ -53,55 +64,57 @@ body {
     align-items: center;
     border-top: 4px double var(--theme-green);
     border-bottom: 4px double var(--theme-green);
-    padding: 15px 0;
-    margin-bottom: 20px;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    /* Reduced margin */
+    flex-shrink: 0;
 }
 
-/* Reduced size to fit */
 .box-bordered {
     border: 2px solid var(--theme-green);
-    padding: 5px 10px;
+    padding: 4px 8px;
     color: var(--theme-green);
     font-weight: normal;
-    font-size: 1.4rem;
-    min-width: 90px;
+    font-size: 1.2rem;
+    min-width: 80px;
     text-align: center;
     position: relative;
-    font-family: 'Huninn', sans-serif;
 }
 
 .year-pill {
     background-color: var(--theme-green);
     color: var(--white);
-    padding: 5px 30px;
-    border-radius: 25px;
-    font-size: 1.6rem;
+    padding: 4px 25px;
+    border-radius: 20px;
+    font-size: 1.4rem;
     font-weight: normal;
-    font-family: 'Huninn', sans-serif;
 }
 
-/* --- Main Body --- */
+/* --- Main Body (Flexible) --- */
 .main-body {
     text-align: center;
-    padding: 10px 0;
+    padding: 0;
     flex-grow: 1;
+    /* Takes available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .giant-date {
-    font-size: 11rem;
+    font-size: 18vh;
+    /* Viewport based size */
     line-height: 1;
     color: var(--theme-green);
     font-weight: normal;
-    font-family: 'Huninn', sans-serif;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .lunar-prominent {
-    font-size: 2.2rem;
-    font-family: 'Huninn', sans-serif;
+    font-size: 2rem;
     color: var(--theme-green);
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-weight: normal;
 }
 
@@ -110,6 +123,7 @@ body {
     border: 2px solid var(--theme-green);
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
 }
 
 /* Info Bar */
@@ -119,14 +133,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 15px;
-    font-family: 'Huninn', sans-serif;
+    padding: 6px 12px;
     font-weight: normal;
+    font-size: 0.95rem;
 }
 
 .en-weekday {
     text-transform: uppercase;
-    font-size: 1rem;
+    font-size: 0.9rem;
     letter-spacing: 1px;
 }
 
@@ -139,84 +153,107 @@ body {
 
 .luck-cell {
     flex: 1;
-    padding: 10px;
+    padding: 8px;
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 8px;
     overflow: hidden;
-    min-height: 120px;
+    min-height: 100px;
+    /* Reduced min-height */
 }
 
 .good-cell {
     border-right: 2px solid var(--theme-green);
 }
 
+/* Icons */
 .luck-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 6px;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Huninn', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
-    margin-top: 5px;
+    margin-top: 3px;
+}
+
+.good-icon {
     background-color: var(--theme-green);
+}
+
+/* RED for Bad Icon */
+.bad-icon {
+    background-color: var(--theme-red);
 }
 
 .luck-list {
     display: grid;
-    /* Changed to Grid */
     grid-template-columns: 1fr 1fr;
-    /* 2 Columns */
-    gap: 5px 10px;
-    /* Row Gap 5px, Col Gap 10px */
-    font-size: 0.9rem;
-    color: var(--theme-green);
+    gap: 3px 8px;
+    font-size: 0.85rem;
     font-weight: normal;
     align-items: flex-start;
     width: 100%;
-    /* Ensure full width for grid */
 }
+
+/* Colors for lists */
+.good-cell .luck-list {
+    color: var(--theme-green);
+}
+
+/* RED for Bad List */
+.bad-cell .luck-list {
+    color: var(--theme-red);
+}
+
 
 /* Footer Bar */
 .footer-bar {
-    padding: 15px;
+    padding: 10px;
     background-color: var(--bg-white);
     border-top: 2px solid var(--theme-green);
     color: var(--theme-green);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     text-align: center;
 }
 
 .quote-container {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    /* Wrap for mobile */
 }
 
 .quote-text {
-    font-family: 'Huninn', sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: normal;
 }
 
 .solar-term-box {
     margin-top: 0;
     border: 1px solid var(--theme-green);
-    padding: 2px 10px;
+    padding: 1px 8px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--theme-green);
     font-weight: normal;
+}
+
+.footer-signoff {
+    font-size: 12px;
+    margin-top: 8px !important;
+    /* Adjusted margin */
+}
+
+.references-link {
+    margin-top: 5px !important;
 }
 
 /* --- Reference Modal --- */
@@ -240,16 +277,14 @@ body {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 20% auto;
     padding: 20px;
     border: 3px solid var(--theme-green);
     width: 80%;
     max-width: 400px;
     border-radius: 8px;
     color: var(--theme-green);
-    font-family: 'Huninn', sans-serif;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .close-btn {
@@ -260,26 +295,8 @@ body {
     cursor: pointer;
 }
 
-.close-btn:hover,
-.close-btn:focus {
+.close-btn:hover {
     color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.modal-content h3 {
-    margin-top: 0;
-    border-bottom: 2px solid var(--theme-green);
-    padding-bottom: 10px;
-}
-
-.modal-content ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.modal-content li {
-    margin: 10px 0;
 }
 
 .modal-content a {
@@ -288,57 +305,66 @@ body {
     font-weight: bold;
 }
 
-.modal-content a:hover {
-    text-decoration: underline;
-}
-
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
     .calendar-container {
-        padding: 15px;
-        border-width: 2px;
+        height: 100vh;
+        /* Full height on mobile */
+        border-width: 0;
+        /* Remove border to save space on small screens? Or keep it thin. */
+        padding: 10px;
+        box-shadow: none;
+        /* Simplify on mobile */
+        max-width: 100%;
     }
 
     .giant-date {
-        font-size: 7rem;
-        /* Smaller date */
+        font-size: 15vh;
     }
 
     .lunar-prominent {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
 
     .box-bordered {
-        font-size: 1.1rem;
-        min-width: 60px;
-        padding: 3px 6px;
+        font-size: 1rem;
+        min-width: 50px;
+        padding: 2px 5px;
     }
 
     .year-pill {
-        font-size: 1.2rem;
-        padding: 5px 15px;
-    }
-
-    .quote-text {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        padding: 3px 15px;
     }
 
     .luck-list {
-        font-size: 0.8rem;
-        gap: 2px 5px;
+        font-size: 0.75rem;
+        gap: 2px 4px;
     }
 
     .luck-icon {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
+        font-size: 0.9rem;
+    }
+
+    .luck-cell {
+        min-height: 80px;
+    }
+
+    .quote-text {
         font-size: 1rem;
     }
 
-    .quote-container {
-        gap: 15px;
+    .footer-bar {
+        padding: 8px;
     }
+
+    /* Ensure Everything Fits */
+    .lower-section {
+        flex-shrink: 1;
+        overflow: hidden;
+    }
+
+    /* Allow shrink if desperately needed */
 }
