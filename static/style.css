@@ -249,10 +249,16 @@ body {
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
+    body {
+        /* Add padding to body so container doesn't touch edges */
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
     .calendar-container {
-        /* Use dvh to account for browser bars */
-        height: 100dvh;
-        max-height: 100dvh;
+        /* Reduce height to ~94dvh to prevent scroll and show padding */
+        height: 94dvh;
+        max-height: 94dvh;
         /* Restore Border & Shadow */
         border: 3px solid var(--theme-green);
         box-shadow:
@@ -263,17 +269,16 @@ body {
     }
 
     .giant-date {
-        font-size: min(180px, 20vh);
-        /* Slightly reduced max size */
+        font-size: min(160px, 18vh);
+        /* Reduced to fit smaller container */
         margin-top: -10px;
         margin-bottom: -10px;
     }
 
     .luck-cell {
-        min-height: 50px;
-        /* Reduced from 80px to save space */
+        min-height: 45px;
+        /* Further reduced */
         padding: 4px;
-        /* Tighter padding */
     }
 
     .luck-list {
@@ -287,6 +292,5 @@ body {
 
     .footer-bar {
         padding: 4px;
-        /* Reduced padding */
     }
 }
