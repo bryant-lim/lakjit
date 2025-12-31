@@ -55,10 +55,11 @@ body {
     align-items: center;
     border-top: 4px double var(--theme-green);
     border-bottom: 4px double var(--theme-green);
-    padding: 6px 0;
-    /* Reduced padding */
-    margin-bottom: 5px;
-    /* Reduced margin */
+    padding: 5px 0;
+    /* Minimal padding */
+    margin-bottom: 0px;
+    /* Zero margin */
+    padding-bottom: 2px;
     flex-shrink: 0;
 }
 
@@ -89,28 +90,28 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Reduce gap nicely */
 }
 
 .giant-date {
     font-size: 200px;
     font-weight: bold;
-    line-height: 0.8;
-    /* Reduced line-height */
+    line-height: 0.75;
+    /* Ultra tight */
     color: var(--theme-green);
-    margin-bottom: 0px;
-    margin-top: -10px;
-    /* Pull up slightly */
-    letter-spacing: -5px;
+    margin-bottom: -15px;
+    /* Relaxed from -25px */
+    margin-top: -25px;
+    /* Relaxed from -35px */
+    letter-spacing: -6px;
 }
 
 .lunar-prominent {
     font-size: 1.8rem;
     color: var(--theme-green);
-    margin-top: 5px;
-    /* Reduced margin */
+    margin-top: 0px;
+    /* Zero margin */
+    padding-top: 5px;
     margin-bottom: 5px;
-    /* Reduced margin */
     font-weight: normal;
 }
 
@@ -129,7 +130,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
+    padding: 4px 10px;
+    /* Tighter padding */
     font-weight: normal;
     font-size: 0.9rem;
 }
@@ -255,7 +257,11 @@ body {
     }
 
     .giant-date {
-        font-size: min(200px, 16vh);
+        font-size: min(200px, 22vh);
+        /* Increased to 22vh to fill scale */
+        margin-top: -15px;
+        /* Less negative on mobile to avoid overlap if font scales differently */
+        margin-bottom: -15px;
     }
 
     .luck-list {
