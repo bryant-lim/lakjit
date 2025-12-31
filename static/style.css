@@ -250,24 +250,30 @@ body {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     .calendar-container {
-        height: 98vh;
-        /* Match desktop height */
+        /* Use dvh to account for browser bars */
+        height: 100dvh;
+        max-height: 100dvh;
         /* Restore Border & Shadow */
         border: 3px solid var(--theme-green);
         box-shadow:
             1px 1px 0 #ccc,
             2px 2px 0 #ccc,
             3px 3px 0 #ccc;
-        /* Slightly reduced shadow for mobile */
         padding: 5px;
-        /* Reduce padding slightly to fit */
     }
 
     .giant-date {
-        font-size: min(200px, 22vh);
+        font-size: min(180px, 20vh);
+        /* Slightly reduced max size */
         margin-top: -10px;
-        /* Tweaked for Serif font scaling */
         margin-bottom: -10px;
+    }
+
+    .luck-cell {
+        min-height: 50px;
+        /* Reduced from 80px to save space */
+        padding: 4px;
+        /* Tighter padding */
     }
 
     .luck-list {
@@ -277,5 +283,10 @@ body {
 
     .luck-icon {
         margin-top: 0;
+    }
+
+    .footer-bar {
+        padding: 4px;
+        /* Reduced padding */
     }
 }
