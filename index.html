@@ -135,9 +135,19 @@
             }
             const numericMonth = getNumericChineseMonth(lunar.getMonth());
 
-            // Update Top Right Month Info to use Numeric Month as well
-            // e.g. 十一月大 instead of 冬月大
-            document.getElementById('lunar-month-info').textContent = numericMonth + '月' + isBig;
+            // --- TOP RIGHT BOX: Western Month (Chinese) + Size ---
+            // Western Month Num (1-12)
+            const westMonthNum = now.getMonth() + 1;
+            const westMonthChinese = getNumericChineseMonth(westMonthNum);
+
+            // Western Month Size (Days in Month)
+            // new Date(year, month, 0) gets the last day of the previous month. 
+            // So for current month, use new Date(year, monthNum, 0)
+            const daysInWestMonth = new Date(year, westMonthNum, 0).getDate();
+            const westIsBig = daysInWestMonth === 31 ? '大' : '小';
+
+            // e.g. 十二月大 (December Big)
+            document.getElementById('lunar-month-info').textContent = westMonthChinese + '月' + westIsBig;
 
             const lunarDayName = lunar.getDayInChinese();
 
