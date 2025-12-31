@@ -113,7 +113,7 @@
 
             // Lunar Month & Size
             const lunarMonthName = lunar.getMonthInChinese();
-            // Size Logic (Same as before)
+            // Size Logic
             let isBig = '小';
             try {
                 const lYear = lunar.getYear();
@@ -126,9 +126,24 @@
 
             document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
 
-            // Lunar Date Full (Month + Day)
+            // --- CHANGED: Strict Numeric Month for Center Display ---
+            // Helper to get One, Two ... Twelve
+            function getNumericChineseMonth(m) {
+                const map = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+                return map[m - 1] || '';
+            }
+            const numericMonth = getNumericChineseMonth(lunar.getMonth());
+
+            // Update Top Right Month Info to use Numeric Month as well
+            // e.g. 十一月大 instead of 冬月大
+            document.getElementById('lunar-month-info').textContent = numericMonth + '月' + isBig;
+
             const lunarDayName = lunar.getDayInChinese();
-            document.getElementById('lunar-date-full').textContent = lunarMonthName + '月' + lunarDayName;
+
+            // Format: 農曆 + Month + 月 + Day + 日
+            // E.g. 農曆十一月十二日
+            document.getElementById('lunar-date-full').textContent = '農曆' + numericMonth + '月' + lunarDayName + '日';
+
 
             // Solar Term
             const jieQi = lunar.getJieQi();
