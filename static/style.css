@@ -30,20 +30,18 @@ body {
     background-color: var(--bg-white);
     width: 100%;
     max-width: 600px;
-    height: 100vh;
-    /* Enforce 100vh as requested */
-    max-height: 100vh;
+    height: 90vh;
+    /* Floating Card Height */
+    max-height: 90vh;
     border: 3px solid var(--theme-green);
     padding: 10px 15px;
     box-shadow:
-        1px 1px 0 #ccc,
         2px 2px 0 #ccc,
-        3px 3px 0 #ccc,
         4px 4px 0 #ccc,
-        5px 5px 0 #ccc,
         6px 6px 0 #ccc,
-        7px 7px 0 #ccc,
-        8px 8px 20px rgba(0, 0, 0, 0.5);
+        8px 8px 0 #ccc,
+        10px 10px 25px rgba(0, 0, 0, 0.4);
+    /* Stronger shadow */
     display: flex;
     flex-direction: column;
     position: relative;
