@@ -30,8 +30,9 @@ body {
     background-color: var(--bg-white);
     width: 100%;
     max-width: 600px;
-    height: 98vh;
-    max-height: 900px;
+    height: 100vh;
+    /* Enforce 100vh as requested */
+    max-height: 100vh;
     border: 3px solid var(--theme-green);
     padding: 10px 15px;
     box-shadow:
@@ -97,9 +98,10 @@ body {
     line-height: 0.8;
     /* Relaxed from 0.75 to fix overlap */
     color: var(--theme-green);
-    margin-bottom: -15px;
+    margin-bottom: -18px;
     /* Less negative */
-    margin-top: -20px;
+    margin-top: -25px;
+    /* Reduce top margin further */
     /* Less negative */
     letter-spacing: -6px;
 }
@@ -250,16 +252,21 @@ body {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     body {
-        /* Add padding to body so container doesn't touch edges */
-        /* Increased left/right padding as requested */
-        padding: 10px 25px;
-        box-sizing: border-box;
+        /* Mobile: Center content and add 20px Left/Right Padding */
+        padding: 0 20px;
+        /* Ensure vertical centering if height allows (flex is on body global) */
     }
 
     .calendar-container {
-        /* Reduce height to ~94dvh to prevent scroll and show padding */
-        height: 94dvh;
-        max-height: 94dvh;
+        /* Fix to 100vh or slightly less to fit screen? 
+           User said "fits within screen height" and "100vh" 
+           Let's use 100vh max, but maybe 98dvh to be safe from bars?
+           Requested "100vh", but mobile bars might cover.
+           Let's try pure 100vh but ensure box-sizing handles border. */
+        height: 96dvh;
+        /* Safety buffer for mobile browser bars */
+        max-height: 96dvh;
+
         /* Restore Border & Shadow */
         border: 3px solid var(--theme-green);
         box-shadow:
