@@ -44,25 +44,26 @@ body {
 .top-bar {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    /* Align bottom of text */
+    align-items: flex-start;
     margin-bottom: 20px;
-    padding: 0 10px;
+    padding: 10px 0;
+    width: 100%;
 }
 
 .box-bordered {
     border: none;
     padding: 0;
     color: var(--text-white);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 300;
-    /* Thin/Elegant */
-    letter-spacing: 1px;
     text-align: left;
+    display: flex;
+    flex-direction: column;
 }
 
 .top-right.box-bordered {
     text-align: right;
+    align-items: flex-end;
 }
 
 .top-center {
@@ -72,11 +73,9 @@ body {
 
 /* Re-enable top center as simple text if needed, but for now user didn't explicitly say remove year. Let's keep it minimal. */
 .year-pill {
-    background: transparent;
-    color: var(--text-white-dim);
-    padding: 0;
-    font-size: 1rem;
-    font-weight: 300;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
 
@@ -91,13 +90,11 @@ body {
 }
 
 .giant-date {
-    font-size: min(250px, 35vh);
-    /* Very large */
+    font-size: min(250px, 30vh);
     font-weight: 900;
-    /* Bold/Heavy for contrast against thin text */
-    line-height: 1;
+    line-height: 0.9;
     color: var(--text-white);
-    margin: 0;
+    margin: -10px 0;
     letter-spacing: -10px;
 }
 
@@ -140,14 +137,14 @@ body {
     gap: 10px;
 }
 
-/* Luck Grid */
+/* --- Luck Grid (Restored 4 Columns) --- */
 .luck-grid {
     border: none;
     background: transparent;
     display: flex;
     justify-content: center;
-    gap: 40px;
-    /* Space between Yi and Ji */
+    gap: 20px;
+    width: 100%;
 }
 
 .luck-cell {
@@ -155,10 +152,8 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
-    /* Icon on top of list */
     align-items: center;
     border: none;
-    min-height: auto;
 }
 
 .good-cell {
@@ -193,13 +188,21 @@ body {
 }
 
 .luck-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 Columns */
+    gap: 5px 10px;
     color: var(--text-white);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 300;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    justify-items: center;
+}
+
+.luck-item {
+    white-space: nowrap;
 }
 
 /* Override coloring */
@@ -296,22 +299,27 @@ body {
 
 /* --- Floating Info Button (Updated Style) --- */
 .floating-btn {
-    /* Hide or restyle? Let's keep it but make it minimal white outline */
-    background: transparent;
+    position: fixed;
     border: 1px solid var(--text-white);
     color: var(--text-white);
-    box-shadow: none;
     border-radius: 50%;
     width: 30px;
     height: 30px;
     font-size: 1rem;
-    right: 20px;
-    top: 70px;
-    /* Below share button */
-    transform: none;
+
+    /* V2 Spec: Left Side */
+    left: 20px;
+    right: auto;
+
+    top: 25px;
+    /* Align with Share button roughly */
+
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.2s;
 }
 
 .floating-btn:hover {
