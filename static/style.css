@@ -252,33 +252,33 @@ body {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     body {
-        /* Mobile: Center content and add 20px Left/Right Padding */
-        padding: 0 20px;
-        /* Ensure vertical centering if height allows (flex is on body global) */
+        /* Reset padding, use Flex centering on global body */
+        padding: 0;
     }
 
     .calendar-container {
-        /* Fix to 100vh or slightly less to fit screen? 
-           User said "fits within screen height" and "100vh" 
-           Let's use 100vh max, but maybe 98dvh to be safe from bars?
-           Requested "100vh", but mobile bars might cover.
-           Let's try pure 100vh but ensure box-sizing handles border. */
-        height: 96dvh;
-        /* Safety buffer for mobile browser bars */
-        max-height: 96dvh;
+        /* Floating Card Layout */
+        width: 88%;
+        /* Leaves side gaps */
+        height: 80dvh;
+        /* Floating vertically (10%-80%-10%) */
+        max-height: 80dvh;
+        margin: auto;
+        /* Center in flex container */
 
-        /* Restore Border & Shadow */
-        border: 3px solid var(--theme-green);
+        /* Stronger Shadow for Card Effect */
         box-shadow:
-            1px 1px 0 #ccc,
             2px 2px 0 #ccc,
-            3px 3px 0 #ccc;
+            4px 4px 0 #ccc,
+            6px 6px 1px rgba(0, 0, 0, 0.2);
+
+        border: 3px solid var(--theme-green);
         padding: 5px;
     }
 
     .giant-date {
-        font-size: min(160px, 18vh);
-        /* Reduced to fit smaller container */
+        font-size: min(140px, 15vh);
+        /* Further reduced for compact card */
         margin-top: -10px;
         margin-bottom: -10px;
     }
