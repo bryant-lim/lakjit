@@ -205,8 +205,42 @@
                 span.textContent = q;
                 quoteContainer.appendChild(span);
             });
+            // Initialize
+            updateCalendar();
+
+            // --- Info Panel Logic ---
+            const infoBtn = document.getElementById('info-btn');
+            const infoPanel = document.getElementById('info-panel');
+            const closeBtn = document.getElementById('close-panel-btn');
+
+            infoBtn.addEventListener('click', () => {
+                infoPanel.classList.add('open');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                infoPanel.classList.remove('open');
+            });
+
+            // Close on click outside (optional)
+            document.addEventListener('click', (e) => {
+                if (!infoPanel.contains(e.target) && !infoBtn.contains(e.target)) {
+                    infoPanel.classList.remove('open');
+                }
+            });
         });
     </script>
+
+    <!-- Floating Info Button -->
+    <div id="info-btn" class="floating-btn">ℹ</div>
+
+    <!-- Slide-out Panel -->
+    <div id="info-panel" class="slide-panel">
+        <button id="close-panel-btn" class="close-btn">&times;</button>
+        <h3>About Lak Jit</h3>
+        <p>In Hokkien, <strong>lak jit</strong> (also spelled la jit) most commonly refers to a calendar.</p>
+        <p>The term is derived from the Chinese characters <strong>日历</strong> (Mandarin: rìlì), which literally
+            translates to "day record" or "calendar".</p>
+    </div>
 </body>
 
 </html>
