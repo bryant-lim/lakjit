@@ -309,12 +309,72 @@ body {
     top: 70px;
     /* Below share button */
     transform: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .floating-btn:hover {
     background: var(--text-white);
     color: var(--bg-red);
     transform: none;
+}
+
+/* --- Slide Panel (Restored) --- */
+.slide-panel {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -320px;
+    /* Hidden */
+    width: 300px;
+    height: auto;
+    max-height: 80vh;
+    background-color: var(--bg-red);
+    /* Match Theme */
+    border-left: 1px solid var(--text-white);
+    border-top: 1px solid var(--text-white);
+    border-bottom: 1px solid var(--text-white);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    transition: right 0.3s ease-in-out;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    color: var(--text-white);
+}
+
+.slide-panel.open {
+    right: 0;
+}
+
+.slide-panel h3 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--text-white);
+    padding-bottom: 10px;
+    font-weight: 500;
+}
+
+.slide-panel p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-white);
+    cursor: pointer;
 }
 
 /* --- Share Modal --- */

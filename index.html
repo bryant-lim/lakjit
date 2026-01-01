@@ -28,289 +28,286 @@
 
             <div class="top-right box-bordered">
                 <span class="zh-month" id="lunar-month-info"></span>
+                <!-- Top Bar -->
+                <div class="top-bar">
+                    <!-- Left: Giant Date -->
+                    <div id="giant-day" class="giant-date box-bordered"></div>
+
+                    <!-- Right: Info -->
+                    <div class="top-right box-bordered">
+                        <div id="month-name" style="font-weight: 900;"></div>
+                        <div id="weekday-en" class="en-weekday"></div>
+                        <div id="weekday-zh"></div>
+                    </div>
+                </div>
+
+                <!-- Main Body -->
+                <div class="main-body">
+                    <!-- Full Lunar Date -->
+                    <div id="lunar-date-full" class="lunar-prominent"></div>
+                    <!-- Auspicious Indicator will be inserted here by JS -->
+
+                    <!-- Lower Section: Luck Grid -->
+                    <div class="lower-section">
+                        <div class="luck-grid">
+                            <!-- Yi (Good) -->
+                            <div class="luck-cell good-cell">
+                                <div class="luck-icon good-icon">宜</div>
+                                <div id="yi-list" class="luck-list"></div>
+                            </div>
+
+                            <!-- Ji (Bad) -->
+                            <div class="luck-cell bad-cell">
+                                <div class="luck-icon bad-icon">忌</div>
+                                <div id="ji-list" class="luck-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer-bar">
+                    <div id="solar-term-box" class="solar-term-box" style="display: none;"></div>
+                    <div id="lunar-year-ganzhi"></div>
+                    <div id="lunar-month-info" style="display: none;"></div> <!-- Hidden/Merged -->
+                    <!-- Quote -->
+                    <div id="quote-container" class="quote-container"></div>
+                    <!-- Signoff -->
+                    <div class="footer-signoff">Fatt Choy Calendar</div>
+                </div>
             </div>
-        </header>
 
-        <!-- Main Body: Giant Date Number -->
-        <main class="main-body">
-            <div class="giant-date" id="giant-day"></div>
-            <!-- Prominent Lunar Date: Format [Month]月[Day] -->
-            <div class="lunar-prominent" id="lunar-date-full"></div>
-        </main>
+            <!-- Main Logic Script -->
+            <!-- Share Button -->
+            <button id="share-btn" class="share-btn"><i class="fas fa-share-alt"></i> Share as Image</button>
 
-        <!-- Lower Section: Grid Info -->
-        <section class="lower-section">
-            <!-- Info Bar: Year Cycle | Weekday -->
-            <div class="info-bar">
-                <div class="info-left">
-                    <span id="lunar-year-ganzhi"></span>
-                </div>
-                <div class="info-right">
-                    <span class="en-weekday" id="weekday-en"></span>
-                    <span class="zh-weekday" id="weekday-zh"></span>
+            <!-- Info Button (Restyled) -->
+            <div id="info-btn" class="floating-btn"><i class="fas fa-info"></i></div>
+
+            <!-- Slide-out Panel (Keep structure but style handled by CSS) -->
+            <div id="info-panel" class="slide-panel">
+                <button id="close-panel-btn" class="close-btn">&times;</button>
+                <h3>About Lak Jit</h3>
+                <p>In Hokkien, <strong>lak jit</strong> (also spelled la jit) most commonly refers to a calendar.</p>
+                <p>The term is derived from the Chinese characters <strong>日历</strong> (Mandarin: rìlì), which literally
+                    translates to "day record" or "calendar".</p>
+            </div>
+
+            <!-- Day Progress Bar -->
+            <div class="day-progress-container">
+                <div class="day-progress-fill" id="day-progress"></div>
+            </div>
+
+            <!-- Share Modal -->
+            <div id="share-modal" class="modal-overlay">
+                <div class="modal-content">
+                    <h3>Add a Message</h3>
+                    <input type="text" id="share-message-input" placeholder="e.g. Happy New Year!" maxlength="30">
+                    <div class="modal-actions">
+                        <button id="cancel-share-btn">Cancel</button>
+                        <button id="confirm-share-btn">Download Image</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Yi/Ji Grid -->
-            <div class="luck-grid">
-                <!-- Yi (Good) -->
-                <div class="luck-cell good-cell">
-                    <div class="luck-icon good-icon">宜</div>
-                    <div class="luck-list" id="yi-list"></div>
-                </div>
+            <!-- Hidden Container for Custom Message Overlay -->
+            <div id="custom-message-overlay" class="custom-message-overlay"></div>
 
-                <!-- Ji (Bad) -->
-                <div class="luck-cell bad-cell">
-                    <div class="luck-icon bad-icon">忌</div>
-                    <div class="luck-list" id="ji-list"></div>
-                </div>
-            </div>
+            <!-- html2canvas CDN -->
+            <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-            <!-- Footer: Dual Quotes & Solar Term -->
-            <footer class="footer-bar">
-                <div class="quote-container" id="quote-container"></div>
+            <!-- Main Logic Script (Including V3 Features) -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    // 1. Gregorian Date Setup
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    // Revert to English Month Name
+                    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+                    const monthName = monthNames[now.getMonth()];
+                    const day = now.getDate();
+                    const weekdayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
 
-                <div class="solar-term-box" id="solar-term-box" style="display: none;"></div>
+                    const weekdayMap = {
+                        'Monday': '一', 'Tuesday': '二', 'Wednesday': '三', 'Thursday': '四',
+                        'Friday': '五', 'Saturday': '六', 'Sunday': '日'
+                    };
+                    const weekdayZh = '星期' + weekdayMap[weekdayEn];
 
-                <!-- Footer Signoff -->
-                <div class="footer-signoff" style="color: var(--theme-green);">
-                    Fatt Choy HOH 2026
-                </div>
-            </footer>
-        </section>
-    </div>
+                    // Render Gregorian
+                    document.getElementById('month-name').textContent = monthName;
+                    // document.getElementById('year-pill').textContent = year; // Keep hidden/minimal if needed
+                    document.getElementById('giant-day').textContent = day;
+                    document.getElementById('weekday-en').textContent = weekdayEn;
+                    document.getElementById('weekday-zh').textContent = weekdayZh;
 
-    <!-- Main Logic Script -->
-    <!-- Share Button -->
-    <button id="share-btn" class="share-btn">Share as Image</button>
+                    // 2. Lunar Calculation
+                    const lunar = Lunar.fromDate(now);
 
-    <!-- Info Button (Restyled) -->
-    <div id="info-btn" class="floating-btn">i</div>
+                    // Lunar Year: GanZhi + Zodiac
+                    const lunarYear = lunar.getYearInGanZhi() + ' (' + lunar.getYearShengXiao() + ')';
+                    document.getElementById('lunar-year-ganzhi').textContent = lunarYear;
 
-    <!-- Slide-out Panel (Keep structure but style handled by CSS) -->
-    <div id="info-panel" class="slide-panel">
-        <button id="close-panel-btn" class="close-btn">&times;</button>
-        <h3>About Lak Jit</h3>
-        <p>In Hokkien, <strong>lak jit</strong> (also spelled la jit) most commonly refers to a calendar.</p>
-        <p>The term is derived from the Chinese characters <strong>日历</strong> (Mandarin: rìlì), which literally
-            translates to "day record" or "calendar".</p>
-    </div>
+                    // Lunar Month & Size
+                    const lunarMonthName = lunar.getMonthInChinese();
+                    // Size Logic
+                    let isBig = '小';
+                    try {
+                        if (Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() === lunar.getMonth()) {
+                            isBig = '大';
+                        }
+                    } catch (e) { }
 
-    <!-- Day Progress Bar -->
-    <div class="day-progress-container">
-        <div class="day-progress-fill" id="day-progress"></div>
-    </div>
+                    document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
 
-    <!-- Share Modal -->
-    <div id="share-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Add a Message</h3>
-            <input type="text" id="share-message-input" placeholder="e.g. Happy New Year!" maxlength="30">
-            <div class="modal-actions">
-                <button id="cancel-share-btn">Cancel</button>
-                <button id="confirm-share-btn">Download Image</button>
-            </div>
-        </div>
-    </div>
+                    // Numeric Month Helper
+                    function getNumericChineseMonth(m) {
+                        const map = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+                        return map[m - 1] || '';
+                    }
+                    const numericMonth = getNumericChineseMonth(lunar.getMonth());
+                    const lunarDayName = lunar.getDayInChinese();
 
-    <!-- Hidden Container for Custom Message Overlay -->
-    <div id="custom-message-overlay" class="custom-message-overlay"></div>
+                    // Format: 農曆 + Month + 月 + Day + 日
+                    document.getElementById('lunar-date-full').textContent = '農曆' + numericMonth + '月' + lunarDayName + '日';
 
-    <!-- html2canvas CDN -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+                    // --- V3 Feature: Auspicious Indicator ---
+                    const auspiciousPhrases = [
+                        'Swee! Good for big plans',
+                        'Heng Ong Huat! Great for business',
+                        'Steady lah. Good for travel',
+                        'Clean house today for luck',
+                        'Beautiful day for a haircut'
+                    ];
+                    // Rotate based on day of month
+                    const phraseIndex = day % auspiciousPhrases.length;
+                    const todayAus = auspiciousPhrases[phraseIndex];
 
-    <!-- Main Logic Script (Including V3 Features) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Gregorian Date Setup
-            const now = new Date();
-            const year = now.getFullYear();
-            // Revert to English Month Name
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
-            const monthName = monthNames[now.getMonth()];
-            const day = now.getDate();
-            const weekdayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
-
-            const weekdayMap = {
-                'Monday': '一', 'Tuesday': '二', 'Wednesday': '三', 'Thursday': '四',
-                'Friday': '五', 'Saturday': '六', 'Sunday': '日'
-            };
-            const weekdayZh = '星期' + weekdayMap[weekdayEn];
-
-            // Render Gregorian
-            document.getElementById('month-name').textContent = monthName;
-            // document.getElementById('year-pill').textContent = year; // Keep hidden/minimal if needed
-            document.getElementById('giant-day').textContent = day;
-            document.getElementById('weekday-en').textContent = weekdayEn;
-            document.getElementById('weekday-zh').textContent = weekdayZh;
-
-            // 2. Lunar Calculation
-            const lunar = Lunar.fromDate(now);
-
-            // Lunar Year: GanZhi + Zodiac
-            const lunarYear = lunar.getYearInGanZhi() + ' (' + lunar.getYearShengXiao() + ')';
-            document.getElementById('lunar-year-ganzhi').textContent = lunarYear;
-
-            // Lunar Month & Size
-            const lunarMonthName = lunar.getMonthInChinese();
-            // Size Logic
-            let isBig = '小';
-            try {
-                if (Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() === lunar.getMonth()) {
-                    isBig = '大';
-                }
-            } catch (e) { }
-
-            document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
-
-            // Numeric Month Helper
-            function getNumericChineseMonth(m) {
-                const map = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-                return map[m - 1] || '';
-            }
-            const numericMonth = getNumericChineseMonth(lunar.getMonth());
-            const lunarDayName = lunar.getDayInChinese();
-
-            // Format: 農曆 + Month + 月 + Day + 日
-            document.getElementById('lunar-date-full').textContent = '農曆' + numericMonth + '月' + lunarDayName + '日';
-
-            // --- V3 Feature: Auspicious Indicator ---
-            const auspiciousPhrases = [
-                'Swee! Good for big plans',
-                'Heng Ong Huat! Great for business',
-                'Steady lah. Good for travel',
-                'Clean house today for luck',
-                'Beautiful day for a haircut'
-            ];
-            // Rotate based on day of month
-            const phraseIndex = day % auspiciousPhrases.length;
-            const todayAus = auspiciousPhrases[phraseIndex];
-
-            // Create or update indicator element
-            let ausContainer = document.getElementById('auspicious-indicator');
-            if (!ausContainer) {
-                ausContainer = document.createElement('div');
-                ausContainer.id = 'auspicious-indicator';
-                ausContainer.className = 'auspicious-indicator';
-                // Insert after lunar date
-                document.getElementById('lunar-date-full').after(ausContainer);
-            }
-            ausContainer.textContent = todayAus;
+                    // Create or update indicator element
+                    let ausContainer = document.getElementById('auspicious-indicator');
+                    if (!ausContainer) {
+                        ausContainer = document.createElement('div');
+                        ausContainer.id = 'auspicious-indicator';
+                        ausContainer.className = 'auspicious-indicator';
+                        // Insert after lunar date
+                        document.getElementById('lunar-date-full').after(ausContainer);
+                    }
+                    ausContainer.textContent = todayAus;
 
 
-            // Solar Term
-            const jieQi = lunar.getJieQi();
-            const termBox = document.getElementById('solar-term-box');
-            if (jieQi) {
-                termBox.textContent = jieQi;
-                termBox.style.display = 'block';
-            }
+                    // Solar Term
+                    const jieQi = lunar.getJieQi();
+                    const termBox = document.getElementById('solar-term-box');
+                    if (jieQi) {
+                        termBox.textContent = jieQi;
+                        termBox.style.display = 'block';
+                    }
 
-            // 3. Yi / Ji Lists
-            const yiContainer = document.getElementById('yi-list');
-            lunar.getDayYi().slice(0, 4).forEach(item => { // Limit to 4 for minimal look
-                const span = document.createElement('span');
-                span.textContent = item;
-                yiContainer.appendChild(span);
-            });
+                    // 3. Yi / Ji Lists
+                    const yiContainer = document.getElementById('yi-list');
+                    lunar.getDayYi().slice(0, 4).forEach(item => { // Limit to 4 for minimal look
+                        const span = document.createElement('span');
+                        span.textContent = item;
+                        yiContainer.appendChild(span);
+                    });
 
-            const jiContainer = document.getElementById('ji-list');
-            lunar.getDayJi().slice(0, 4).forEach(item => { // Limit to 4
-                const span = document.createElement('span');
-                span.textContent = item;
-                jiContainer.appendChild(span);
-            });
+                    const jiContainer = document.getElementById('ji-list');
+                    lunar.getDayJi().slice(0, 4).forEach(item => { // Limit to 4
+                        const span = document.createElement('span');
+                        span.textContent = item;
+                        jiContainer.appendChild(span);
+                    });
 
-            // 4. Quotes System (Minimal)
-            const quotes = ["大吉大利", "万事如意", "心想事成", "身体健康", "恭喜发财", "年年有余", "步步高升", "一帆风顺"];
-            const selectedQuotes = quotes.sort(() => 0.5 - Math.random()).slice(0, 2);
-            const quoteContainer = document.getElementById('quote-container');
-            selectedQuotes.forEach(q => {
-                const span = document.createElement('span');
-                span.className = 'quote-text';
-                span.textContent = q;
-                quoteContainer.appendChild(span);
-            });
+                    // 4. Quotes System (Minimal)
+                    const quotes = ["大吉大利", "万事如意", "心想事成", "身体健康", "恭喜发财", "年年有余", "步步高升", "一帆风顺"];
+                    const selectedQuotes = quotes.sort(() => 0.5 - Math.random()).slice(0, 2);
+                    const quoteContainer = document.getElementById('quote-container');
+                    selectedQuotes.forEach(q => {
+                        const span = document.createElement('span');
+                        span.className = 'quote-text';
+                        span.textContent = q;
+                        quoteContainer.appendChild(span);
+                    });
 
-            // --- V3 Feature: Day Progress Bar ---
-            function updateProgressBar() {
-                const now = new Date();
-                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM
-                const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // 11:59:59 PM
-                const total = end - start;
-                const current = now - start;
-                const percentage = (current / total) * 100;
-                document.getElementById('day-progress').style.width = percentage + '%';
-            }
-            updateProgressBar();
-            setInterval(updateProgressBar, 60000); // Update every minute
+                    // --- V3 Feature: Day Progress Bar ---
+                    function updateProgressBar() {
+                        const now = new Date();
+                        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM
+                        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // 11:59:59 PM
+                        const total = end - start;
+                        const current = now - start;
+                        const percentage = (current / total) * 100;
+                        document.getElementById('day-progress').style.width = percentage + '%';
+                    }
+                    updateProgressBar();
+                    setInterval(updateProgressBar, 60000); // Update every minute
 
-            // Logic for Buttons (Info & Share)
-            const infoBtn = document.getElementById('info-btn');
-            const infoPanel = document.getElementById('info-panel');
-            const closeBtn = document.getElementById('close-panel-btn');
+                    // Logic for Buttons (Info & Share)
+                    const infoBtn = document.getElementById('info-btn');
+                    const infoPanel = document.getElementById('info-panel');
+                    const closeBtn = document.getElementById('close-panel-btn');
 
-            if (infoBtn) infoBtn.addEventListener('click', () => infoPanel.classList.add('open'));
-            if (closeBtn) closeBtn.addEventListener('click', () => infoPanel.classList.remove('open'));
-            document.addEventListener('click', (e) => {
-                if (infoPanel && infoBtn && !infoPanel.contains(e.target) && !infoBtn.contains(e.target)) {
-                    infoPanel.classList.remove('open');
-                }
-            });
+                    if (infoBtn) infoBtn.addEventListener('click', () => infoPanel.classList.add('open'));
+                    if (closeBtn) closeBtn.addEventListener('click', () => infoPanel.classList.remove('open'));
+                    document.addEventListener('click', (e) => {
+                        if (infoPanel && infoBtn && !infoPanel.contains(e.target) && !infoBtn.contains(e.target)) {
+                            infoPanel.classList.remove('open');
+                        }
+                    });
 
-            // --- V3 Feature: Share as Image & Modal ---
-            const shareBtn = document.getElementById('share-btn');
-            const shareModal = document.getElementById('share-modal');
-            const cancelShare = document.getElementById('cancel-share-btn');
-            const confirmShare = document.getElementById('confirm-share-btn');
-            const messageInput = document.getElementById('share-message-input');
-            const messageOverlay = document.getElementById('custom-message-overlay');
+                    // --- V3 Feature: Share as Image & Modal ---
+                    const shareBtn = document.getElementById('share-btn');
+                    const shareModal = document.getElementById('share-modal');
+                    const cancelShare = document.getElementById('cancel-share-btn');
+                    const confirmShare = document.getElementById('confirm-share-btn');
+                    const messageInput = document.getElementById('share-message-input');
+                    const messageOverlay = document.getElementById('custom-message-overlay');
 
-            shareBtn.addEventListener('click', () => {
-                shareModal.classList.add('show');
-                messageInput.value = '';
-                messageInput.focus();
-            });
+                    shareBtn.addEventListener('click', () => {
+                        shareModal.classList.add('show');
+                        messageInput.value = '';
+                        messageInput.focus();
+                    });
 
-            cancelShare.addEventListener('click', () => {
-                shareModal.classList.remove('show');
-            });
+                    cancelShare.addEventListener('click', () => {
+                        shareModal.classList.remove('show');
+                    });
 
-            confirmShare.addEventListener('click', () => {
-                const customMsg = messageInput.value.trim();
-                shareModal.classList.remove('show');
+                    confirmShare.addEventListener('click', () => {
+                        const customMsg = messageInput.value.trim();
+                        shareModal.classList.remove('show');
 
-                // Show message overlay if exists
-                if (customMsg) {
-                    messageOverlay.textContent = customMsg;
-                    messageOverlay.style.display = 'block';
-                }
+                        // Show message overlay if exists
+                        if (customMsg) {
+                            messageOverlay.textContent = customMsg;
+                            messageOverlay.style.display = 'block';
+                        }
 
-                // Hide interactive elements before capture
-                shareBtn.style.display = 'none';
-                infoBtn.style.display = 'none';
-                if (infoPanel) infoPanel.style.display = 'none';
+                        // Hide interactive elements before capture
+                        shareBtn.style.display = 'none';
+                        infoBtn.style.display = 'none';
+                        if (infoPanel) infoPanel.style.display = 'none';
 
-                // Capture
-                html2canvas(document.body, {
-                    backgroundColor: '#C41E3A', // Force theme color
-                    scale: 2 // High quality
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'lakjit-calendar.png';
-                    link.href = canvas.toDataURL();
-                    link.click();
+                        // Capture
+                        html2canvas(document.body, {
+                            backgroundColor: '#C41E3A', // Force theme color
+                            scale: 2 // High quality
+                        }).then(canvas => {
+                            const link = document.createElement('a');
+                            link.download = 'lakjit-calendar.png';
+                            link.href = canvas.toDataURL();
+                            link.click();
 
-                    // Restore elements
-                    shareBtn.style.display = '';
-                    infoBtn.style.display = '';
-                    if (infoPanel) infoPanel.style.display = '';
-                    messageOverlay.style.display = 'none';
+                            // Restore elements
+                            shareBtn.style.display = '';
+                            infoBtn.style.display = '';
+                            if (infoPanel) infoPanel.style.display = '';
+                            messageOverlay.style.display = 'none';
+                        });
+                    });
                 });
-            });
-        });
-    </script>
+            </script>
 </body>
 
 </html>
