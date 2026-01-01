@@ -1,22 +1,17 @@
 :root {
-    --bg-white: #ffffff;
-    --theme-green: #006400;
-    /* Dark Green */
-    --theme-green-light: #228B22;
-    /* Forest Green */
-    --theme-red: #c92a2a;
-    /* Vintage Red for Bad Luck */
-    --ink-black: #2b2b2b;
-    --white: #ffffff;
-    --border-color: #006400;
+    --bg-red: #C41E3A;
+    /* Cardinal Red */
+    --text-white: #FFFFFF;
+    --text-white-dim: rgba(255, 255, 255, 0.8);
+    --font-main: 'Noto Sans TC', sans-serif;
 }
 
 body {
     margin: 0;
     padding: 0;
-    background-color: #e0e0e0;
-    font-family: 'Noto Serif CJK TC', serif;
-    /* Noto Serif */
+    background-color: var(--bg-red);
+    color: var(--text-white);
+    font-family: var(--font-main);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,358 +22,392 @@ body {
 }
 
 .calendar-container {
-    background-color: var(--bg-white);
+    background-color: transparent;
+    /* No card background */
     width: 100%;
     max-width: 600px;
-    height: 90vh;
-    /* Floating Card Height */
-    max-height: 90vh;
-    border: 3px solid var(--theme-green);
-    padding: 10px 15px;
-    box-shadow:
-        2px 2px 0 #ccc,
-        4px 4px 0 #ccc,
-        6px 6px 0 #ccc,
-        8px 8px 0 #ccc,
-        10px 10px 25px rgba(0, 0, 0, 0.4);
-    /* Stronger shadow */
+    /* Keep consistent width constraint */
+    height: 100vh;
+    /* Full height as requested */
+    max-height: 100vh;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Vertically center content */
     position: relative;
     box-sizing: border-box;
+    /* No borders, no shadows */
 }
 
 /* --- Top Bar --- */
 .top-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-top: 4px double var(--theme-green);
-    border-bottom: 4px double var(--theme-green);
-    padding: 5px 0;
-    margin-bottom: 0px;
-    padding-bottom: 2px;
-    flex-shrink: 0;
+    align-items: flex-end;
+    /* Align bottom of text */
+    margin-bottom: 20px;
+    padding: 0 10px;
 }
 
 .box-bordered {
-    border: 2px solid var(--theme-green);
-    padding: 3px 6px;
-    color: var(--theme-green);
-    font-weight: normal;
-    font-size: 1.1rem;
-    min-width: 70px;
-    text-align: center;
+    border: none;
+    padding: 0;
+    color: var(--text-white);
+    font-size: 1.2rem;
+    font-weight: 300;
+    /* Thin/Elegant */
+    letter-spacing: 1px;
+    text-align: left;
 }
 
-.year-pill {
-    background-color: var(--theme-green);
-    color: var(--white);
-    padding: 3px 20px;
-    border-radius: 20px;
-    font-size: 1.3rem;
-    font-weight: normal;
+.top-right.box-bordered {
+    text-align: right;
 }
+
+.top-center {
+    display: none;
+    /* Hide year pill to simplify? Or keeping it minimal? Let's hide it for "minimalist" request or make it very subtle. User said "Center the main content vertically". Let's keep year but make it text only. */
+}
+
+/* Re-enable top center as simple text if needed, but for now user didn't explicitly say remove year. Let's keep it minimal. */
+.year-pill {
+    background: transparent;
+    color: var(--text-white-dim);
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
 
 /* --- Main Body --- */
 .main-body {
     text-align: center;
-    padding: 0;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .giant-date {
-    font-size: 200px;
-    font-weight: bold;
-    line-height: 0.8;
-    /* Relaxed from 0.75 to fix overlap */
-    color: var(--theme-green);
-    margin-bottom: -18px;
-    /* Less negative */
-    margin-top: -25px;
-    /* Reduce top margin further */
-    /* Less negative */
-    letter-spacing: -6px;
+    font-size: min(250px, 35vh);
+    /* Very large */
+    font-weight: 900;
+    /* Bold/Heavy for contrast against thin text */
+    line-height: 1;
+    color: var(--text-white);
+    margin: 0;
+    letter-spacing: -10px;
 }
 
 .lunar-prominent {
-    font-size: 1.8rem;
-    color: var(--theme-green);
-    margin-top: 0px;
-    padding-top: 5px;
-    margin-bottom: 5px;
-    font-weight: normal;
+    font-size: 1.5rem;
+    color: var(--text-white);
+    font-weight: 300;
+    letter-spacing: 4px;
+    /* Elegant spacing */
+    margin-top: 10px;
+    opacity: 0.9;
 }
 
 /* --- Lower Section --- */
 .lower-section {
-    border: 2px solid var(--theme-green);
+    border: none;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
+    gap: 30px;
+    /* Elegant spacing */
+    margin-bottom: 40px;
+    /* Space for progress bar at bottom */
 }
 
-/* Info Bar */
+/* Info Bar (Hidden/Simplified) */
 .info-bar {
-    background-color: var(--theme-green);
-    color: var(--white);
+    background: transparent;
+    color: var(--text-white);
+    padding: 0;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 10px;
-    font-weight: normal;
-    font-size: 0.9rem;
+    justify-content: center;
+    gap: 20px;
+    font-size: 1rem;
+    font-weight: 300;
 }
 
-.en-weekday {
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
+.info-left,
+.info-right {
+    display: flex;
+    gap: 10px;
 }
 
 /* Luck Grid */
 .luck-grid {
+    border: none;
+    background: transparent;
     display: flex;
-    border-bottom: 2px solid var(--theme-green);
-    background-color: rgba(255, 255, 255, 0.9);
+    justify-content: center;
+    gap: 40px;
+    /* Space between Yi and Ji */
 }
 
 .luck-cell {
     flex: 1;
-    padding: 6px;
+    padding: 0;
     display: flex;
-    flex-direction: row;
-    gap: 6px;
-    overflow: hidden;
-    min-height: 80px;
+    flex-direction: column;
+    /* Icon on top of list */
+    align-items: center;
+    border: none;
+    min-height: auto;
 }
 
 .good-cell {
-    border-right: 2px solid var(--theme-green);
+    border: none;
 }
 
-/* Icons */
+.bad-cell {
+    border: none;
+}
+
 .luck-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    /* Circle */
+    background: var(--text-white);
+    color: var(--bg-red);
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
     font-size: 0.9rem;
-    flex-shrink: 0;
-    margin-top: 2px;
+    margin-bottom: 10px;
 }
 
 .good-icon {
-    background-color: var(--theme-green);
+    /* Same style */
 }
 
 .bad-icon {
-    background-color: var(--theme-red);
+    /* Same style */
 }
 
 .luck-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0px 4px;
-    /* Reduced vertical gap to 0 */
-    font-size: 0.8rem;
-    font-weight: normal;
-    line-height: 1.25;
-    /* Ensure lines are tight */
-    align-items: start;
-    width: 100%;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-weight: 300;
 }
 
+/* Override coloring */
 .good-cell .luck-list {
-    color: var(--theme-green);
+    color: var(--text-white);
 }
 
 .bad-cell .luck-list {
-    color: var(--theme-red);
+    color: var(--text-white);
 }
 
 
 /* Footer Bar */
 .footer-bar {
-    padding: 8px;
-    background-color: var(--bg-white);
-    border-top: 2px solid var(--theme-green);
-    color: var(--theme-green);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    text-align: center;
+    border: none;
+    background: transparent;
+    color: var(--text-white-dim);
+    padding: 0;
+    gap: 10px;
 }
 
 .quote-container {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.quote-text {
-    font-size: 1.1rem;
-    font-weight: normal;
+    color: var(--text-white);
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: 1px;
 }
 
 .solar-term-box {
-    margin-top: 0;
-    border: 1px solid var(--theme-green);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--theme-green);
-    font-weight: normal;
+    border: 1px solid var(--text-white-dim);
+    color: var(--text-white);
+    border-radius: 20px;
+    padding: 2px 10px;
 }
 
 .footer-signoff {
-    font-size: 12px;
-    margin-top: 5px !important;
-    font-weight: bold;
+    color: var(--text-white-dim) !important;
+    opacity: 0.5;
+    font-weight: 300;
 }
 
-/* --- Floating Info Panel --- */
-.floating-btn {
+/* --- Auspicious Indicator (New) --- */
+.auspicious-indicator {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-white);
+    margin-top: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* --- Day Progress Bar (New) --- */
+.day-progress-container {
     position: fixed;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: var(--theme-green);
-    color: white;
-    width: 40px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 999;
+}
+
+.day-progress-fill {
+    height: 100%;
+    background: #FFFFFF;
+    width: 0%;
+    /* JS will update */
+    transition: width 0.5s ease-in-out;
+}
+
+/* --- Download Button (New) --- */
+.share-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid var(--text-white);
+    color: var(--text-white);
+    padding: 5px 15px;
+    border-radius: 20px;
     cursor: pointer;
-    font-size: 1.5rem;
-    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    transition: all 0.2s;
     z-index: 1000;
-    transition: transform 0.2s;
+}
+
+.share-btn:hover {
+    background: var(--text-white);
+    color: var(--bg-red);
+}
+
+/* --- Floating Info Button (Updated Style) --- */
+.floating-btn {
+    /* Hide or restyle? Let's keep it but make it minimal white outline */
+    background: transparent;
+    border: 1px solid var(--text-white);
+    color: var(--text-white);
+    box-shadow: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    right: 20px;
+    top: 70px;
+    /* Below share button */
+    transform: none;
 }
 
 .floating-btn:hover {
-    transform: translateY(-50%) scale(1.1);
+    background: var(--text-white);
+    color: var(--bg-red);
+    transform: none;
 }
 
-.slide-panel {
+/* --- Share Modal --- */
+.modal-overlay {
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    /* Verify vertical center */
-    right: -320px;
-    /* Hidden off-screen */
-    width: 300px;
-    height: auto;
-    /* Content based height */
-    max-height: 80vh;
-    background-color: var(--bg-white);
-    border-left: 5px solid var(--theme-green);
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.25);
-    z-index: 1001;
-    transition: right 0.3s ease-in-out;
-    padding: 30px 20px;
-    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    overflow-y: auto;
-    /* In case content is long */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
 }
 
-.slide-panel.open {
-    right: 0;
-    /* Slide in */
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.slide-panel h3 {
-    color: var(--theme-green);
-    border-bottom: 2px double var(--theme-green);
-    padding-bottom: 10px;
+.modal-content {
+    background: var(--bg-red);
+    border: 1px solid var(--text-white);
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
     margin-top: 0;
+    font-weight: 300;
 }
 
-.slide-panel p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--ink-black);
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
+.modal-content input {
+    width: 90%;
+    padding: 10px;
+    margin: 15px 0;
     border: none;
-    font-size: 2rem;
-    color: var(--theme-green);
+    border-bottom: 1px solid var(--text-white);
+    background: transparent;
+    color: var(--text-white);
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+}
+
+.modal-content input::placeholder {
+    color: var(--text-white-dim);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.modal-actions button {
+    background: transparent;
+    border: 1px solid var(--text-white);
+    color: var(--text-white);
+    padding: 5px 15px;
+    border-radius: 20px;
     cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 600px) {
-    body {
-        /* Reset padding, use Flex centering on global body */
-        padding: 0;
-    }
-
-    .calendar-container {
-        /* Floating Card Layout */
-        width: 88%;
-        /* Leaves side gaps */
-        height: 80dvh;
-        /* Floating vertically (10%-80%-10%) */
-        max-height: 80dvh;
-        margin: auto;
-        /* Center in flex container */
-
-        /* Stronger Shadow for Card Effect */
-        box-shadow:
-            2px 2px 0 #ccc,
-            4px 4px 0 #ccc,
-            6px 6px 1px rgba(0, 0, 0, 0.2);
-
-        border: 3px solid var(--theme-green);
-        padding: 5px;
-    }
-
-    .giant-date {
-        font-size: min(140px, 15vh);
-        /* Further reduced for compact card */
-        margin-top: -10px;
-        margin-bottom: -10px;
-    }
-
-    .luck-cell {
-        min-height: 45px;
-        /* Further reduced */
-        padding: 4px;
-    }
-
-    .luck-list {
-        grid-template-columns: repeat(3, 1fr);
-        font-size: 0.7rem;
-    }
-
-    .luck-icon {
-        margin-top: 0;
-    }
-
-    .footer-bar {
-        padding: 4px;
-    }
+.modal-actions button:hover {
+    background: var(--text-white);
+    color: var(--bg-red);
 }
+
+/* --- Custom Message Overlay --- */
+.custom-message-overlay {
+    position: absolute;
+    bottom: 80px;
+    /* Above footer */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-white);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    display: none;
+    /* JS toggles this */
+    pointer-events: none;
+}
+
+```

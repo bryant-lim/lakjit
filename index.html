@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fatt Choy Chinese Calendar</title>
-    <!-- Noto Serif CJK TC Import -->
-    <link href="https://fonts.googleapis.com/earlyaccess/notoserifcjktc.css" rel="stylesheet" />
+    <!-- Noto Sans TC Import -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="static/style.css">
     <!-- Lunar JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
@@ -80,10 +81,13 @@
     </div>
 
     <!-- Main Logic Script -->
-    <!-- Floating Info Button -->
-    <div id="info-btn" class="floating-btn">ℹ</div>
+    <!-- Share Button -->
+    <button id="share-btn" class="share-btn">Share as Image</button>
 
-    <!-- Slide-out Panel -->
+    <!-- Info Button (Restyled) -->
+    <div id="info-btn" class="floating-btn">i</div>
+
+    <!-- Slide-out Panel (Keep structure but style handled by CSS) -->
     <div id="info-panel" class="slide-panel">
         <button id="close-panel-btn" class="close-btn">&times;</button>
         <h3>About Lak Jit</h3>
@@ -92,7 +96,30 @@
             translates to "day record" or "calendar".</p>
     </div>
 
-    <!-- Main Logic Script (Moved to End) -->
+    <!-- Day Progress Bar -->
+    <div class="day-progress-container">
+        <div class="day-progress-fill" id="day-progress"></div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Add a Message</h3>
+            <input type="text" id="share-message-input" placeholder="e.g. Happy New Year!" maxlength="30">
+            <div class="modal-actions">
+                <button id="cancel-share-btn">Cancel</button>
+                <button id="confirm-share-btn">Download Image</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Container for Custom Message Overlay -->
+    <div id="custom-message-overlay" class="custom-message-overlay"></div>
+
+    <!-- html2canvas CDN -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <!-- Main Logic Script (Including V3 Features) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Gregorian Date Setup
@@ -113,7 +140,7 @@
 
             // Render Gregorian
             document.getElementById('month-name').textContent = monthName;
-            document.getElementById('year-pill').textContent = year;
+            // document.getElementById('year-pill').textContent = year; // Keep hidden/minimal if needed
             document.getElementById('giant-day').textContent = day;
             document.getElementById('weekday-en').textContent = weekdayEn;
             document.getElementById('weekday-zh').textContent = weekdayZh;
@@ -130,43 +157,46 @@
             // Size Logic
             let isBig = '小';
             try {
-                const lYear = lunar.getYear();
-                const lMonth = lunar.getMonth();
-                const d30 = Lunar.fromYmd(lYear, lMonth, 30);
-                if (d30.getMonth() === lMonth) {
+                if (Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() === lunar.getMonth()) {
                     isBig = '大';
                 }
             } catch (e) { }
 
             document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
 
-            // --- CHANGED: Strict Numeric Month for Center Display ---
-            // Helper to get One, Two ... Twelve
+            // Numeric Month Helper
             function getNumericChineseMonth(m) {
                 const map = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
                 return map[m - 1] || '';
             }
             const numericMonth = getNumericChineseMonth(lunar.getMonth());
-
-            // --- TOP RIGHT BOX: Western Month (Chinese) + Size ---
-            // Western Month Num (1-12)
-            const westMonthNum = now.getMonth() + 1;
-            const westMonthChinese = getNumericChineseMonth(westMonthNum);
-
-            // Western Month Size (Days in Month)
-            // new Date(year, month, 0) gets the last day of the previous month. 
-            // So for current month, use new Date(year, monthNum, 0)
-            const daysInWestMonth = new Date(year, westMonthNum, 0).getDate();
-            const westIsBig = daysInWestMonth === 31 ? '大' : '小';
-
-            // e.g. 十二月大 (December Big)
-            document.getElementById('lunar-month-info').textContent = westMonthChinese + '月' + westIsBig;
-
             const lunarDayName = lunar.getDayInChinese();
 
             // Format: 農曆 + Month + 月 + Day + 日
-            // E.g. 農曆十一月十二日
             document.getElementById('lunar-date-full').textContent = '農曆' + numericMonth + '月' + lunarDayName + '日';
+
+            // --- V3 Feature: Auspicious Indicator ---
+            const auspiciousPhrases = [
+                'Swee! Good for big plans',
+                'Heng Ong Huat! Great for business',
+                'Steady lah. Good for travel',
+                'Clean house today for luck',
+                'Beautiful day for a haircut'
+            ];
+            // Rotate based on day of month
+            const phraseIndex = day % auspiciousPhrases.length;
+            const todayAus = auspiciousPhrases[phraseIndex];
+
+            // Create or update indicator element
+            let ausContainer = document.getElementById('auspicious-indicator');
+            if (!ausContainer) {
+                ausContainer = document.createElement('div');
+                ausContainer.id = 'auspicious-indicator';
+                ausContainer.className = 'auspicious-indicator';
+                // Insert after lunar date
+                document.getElementById('lunar-date-full').after(ausContainer);
+            }
+            ausContainer.textContent = todayAus;
 
 
             // Solar Term
@@ -178,39 +208,23 @@
             }
 
             // 3. Yi / Ji Lists
-            const yiList = lunar.getDayYi(); // Array
-            const jiList = lunar.getDayJi(); // Array
-
             const yiContainer = document.getElementById('yi-list');
-            yiList.forEach(item => {
+            lunar.getDayYi().slice(0, 4).forEach(item => { // Limit to 4 for minimal look
                 const span = document.createElement('span');
-                span.className = 'luck-item';
                 span.textContent = item;
                 yiContainer.appendChild(span);
             });
 
             const jiContainer = document.getElementById('ji-list');
-            jiList.forEach(item => {
+            lunar.getDayJi().slice(0, 4).forEach(item => { // Limit to 4
                 const span = document.createElement('span');
-                span.className = 'luck-item';
                 span.textContent = item;
                 jiContainer.appendChild(span);
             });
 
-            // 4. Quotes System
-            const quotes = [
-                "大吉大利", "万事如意", "心想事成", "身体健康",
-                "恭喜发财", "年年有余", "步步高升", "一帆风顺",
-                "金玉满堂", "吉星高照", "花开富贵", "国泰民安"
-            ];
-
-            // Shuffle and pick 2
-            function getMultipleRandom(arr, num) {
-                const shuffled = [...arr].sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, num);
-            }
-            const selectedQuotes = getMultipleRandom(quotes, 2);
-
+            // 4. Quotes System (Minimal)
+            const quotes = ["大吉大利", "万事如意", "心想事成", "身体健康", "恭喜发财", "年年有余", "步步高升", "一帆风顺"];
+            const selectedQuotes = quotes.sort(() => 0.5 - Math.random()).slice(0, 2);
             const quoteContainer = document.getElementById('quote-container');
             selectedQuotes.forEach(q => {
                 const span = document.createElement('span');
@@ -218,31 +232,82 @@
                 span.textContent = q;
                 quoteContainer.appendChild(span);
             });
-            // Initialize
-            // updateCalendar(); // Removed legacy call
 
-            // --- Info Panel Logic ---
+            // --- V3 Feature: Day Progress Bar ---
+            function updateProgressBar() {
+                const now = new Date();
+                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM
+                const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // 11:59:59 PM
+                const total = end - start;
+                const current = now - start;
+                const percentage = (current / total) * 100;
+                document.getElementById('day-progress').style.width = percentage + '%';
+            }
+            updateProgressBar();
+            setInterval(updateProgressBar, 60000); // Update every minute
+
+            // Logic for Buttons (Info & Share)
             const infoBtn = document.getElementById('info-btn');
             const infoPanel = document.getElementById('info-panel');
             const closeBtn = document.getElementById('close-panel-btn');
 
-            if (infoBtn) {
-                infoBtn.addEventListener('click', () => {
-                    infoPanel.classList.add('open');
-                });
-            }
-
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    infoPanel.classList.remove('open');
-                });
-            }
-
-            // Close on click outside (optional)
+            if (infoBtn) infoBtn.addEventListener('click', () => infoPanel.classList.add('open'));
+            if (closeBtn) closeBtn.addEventListener('click', () => infoPanel.classList.remove('open'));
             document.addEventListener('click', (e) => {
                 if (infoPanel && infoBtn && !infoPanel.contains(e.target) && !infoBtn.contains(e.target)) {
                     infoPanel.classList.remove('open');
                 }
+            });
+
+            // --- V3 Feature: Share as Image & Modal ---
+            const shareBtn = document.getElementById('share-btn');
+            const shareModal = document.getElementById('share-modal');
+            const cancelShare = document.getElementById('cancel-share-btn');
+            const confirmShare = document.getElementById('confirm-share-btn');
+            const messageInput = document.getElementById('share-message-input');
+            const messageOverlay = document.getElementById('custom-message-overlay');
+
+            shareBtn.addEventListener('click', () => {
+                shareModal.classList.add('show');
+                messageInput.value = '';
+                messageInput.focus();
+            });
+
+            cancelShare.addEventListener('click', () => {
+                shareModal.classList.remove('show');
+            });
+
+            confirmShare.addEventListener('click', () => {
+                const customMsg = messageInput.value.trim();
+                shareModal.classList.remove('show');
+
+                // Show message overlay if exists
+                if (customMsg) {
+                    messageOverlay.textContent = customMsg;
+                    messageOverlay.style.display = 'block';
+                }
+
+                // Hide interactive elements before capture
+                shareBtn.style.display = 'none';
+                infoBtn.style.display = 'none';
+                if (infoPanel) infoPanel.style.display = 'none';
+
+                // Capture
+                html2canvas(document.body, {
+                    backgroundColor: '#C41E3A', // Force theme color
+                    scale: 2 // High quality
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'lakjit-calendar.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+
+                    // Restore elements
+                    shareBtn.style.display = '';
+                    infoBtn.style.display = '';
+                    if (infoPanel) infoPanel.style.display = '';
+                    messageOverlay.style.display = 'none';
+                });
             });
         });
     </script>
