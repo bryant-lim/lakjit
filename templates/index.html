@@ -1,145 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vintage Chinese Calendar</title>
+    <title>好日曆 Lak-Jit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Huninn Font Import -->
-    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="green-theme">
-    <div class="calendar-container">
+<body>
+    <div class="container">
+        <!-- Site Title -->
+        <div class="site-title">Lak-Jit</div>
 
-        <!-- Top Bar: Month | Year | Lunar Month Info -->
-        <header class="top-bar">
-            <div class="top-left box-bordered">
-                <span class="en-month">{{ month_name }}</span>
-            </div>
+        <!-- Content Wrapper for vertical centering -->
+        <div class="content-wrapper">
+            <!-- Date Header -->
+            <div class="date-header">{{ year }} 年 {{ month }} 月</div>
 
-            <div class="top-center">
-                <div class="year-pill">{{ year }}</div>
-            </div>
+            <!-- Big Date -->
+            <div class="big-date">{{ day }}</div>
 
-            <div class="top-right box-bordered">
-                <span class="zh-month">{{ lunar_month_chinese }}月{{ lunar_month_size }}</span>
-            </div>
-        </header>
+            <!-- Weekday with Lunar Date -->
+            <div class="weekday">{{ weekday_zh }} | {{ lunar_date_short }}</div>
 
-        <!-- Main Body: Giant Date Number -->
-        <main class="main-body">
-            <div class="giant-date">{{ day }}</div>
-            <!-- Prominent Lunar Date: Format [Month]月[Day] -->
-            <div class="lunar-prominent">{{ lunar_date_full }}</div>
-        </main>
+            <!-- Daily Quote -->
+            <div class="daily-quote">{{ daily_quote }}</div>
 
-        <!-- Lower Section: Grid Info -->
-        <section class="lower-section">
-            <!-- Info Bar: Year Cycle | Weekday -->
-            <div class="info-bar">
-                <div class="info-left">
-                    <span>{{ lunar_year_chinese }}</span>
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Activities Section -->
+            <div class="activities">
+                <div class="activity-row">
+                    <span class="activity-title">宜：</span>
+                    <span class="activity-list">
+                        {% for item in good_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
+                    </span>
                 </div>
-                <div class="info-right">
-                    <span class="en-weekday">{{ weekday }}</span>
-                    <span class="zh-weekday">星期{{
-                        {'Monday':'一','Tuesday':'二','Wednesday':'三','Thursday':'四','Friday':'五','Saturday':'六','Sunday':'日'}[weekday]
-                        }}</span>
+                <div class="activity-row">
+                    <span class="activity-title">忌：</span>
+                    <span class="activity-list">
+                        {% for item in bad_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
+                    </span>
                 </div>
-            </div>
-
-            <!-- Yi/Ji Grid -->
-            <div class="luck-grid">
-                <!-- Yi (Good) -->
-                <div class="luck-cell good-cell">
-                    <div class="luck-icon good-icon">宜</div>
-                    <div class="luck-list">
-                        {% for item in good_for %}
-                        <span class="luck-item">{{ item }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Ji (Bad) -->
-                <div class="luck-cell bad-cell">
-                    <div class="luck-icon bad-icon">忌</div>
-                    <div class="luck-list">
-                        {% for item in bad_for %}
-                        <span class="luck-item">{{ item }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer: Dual Quotes & Solar Term -->
-            <footer class="footer-bar">
-                <div class="quote-container">
-                    {% for quote in random_quotes %}
-                    <span class="quote-text">{{ quote }}</span>
-                    {% endfor %}
-                </div>
-
-                <div class="solar-term-box" v-if="solar_term">
-                    {{ solar_term }}
-                </div>
-
-                <!-- Footer Signoff -->
-                <div class="footer-signoff"
-                    style="margin-top: 20px; font-weight: bold; color: var(--theme-green); font-size: 12px;">
-                    Fatt Choy HOH 2026
-                </div>
-
-                <!-- References Link -->
-                <div class="references-link" style="margin-top: 10px; font-size: 0.8rem;">
-                    <a href="#" id="refBtn" class="ref-link">References</a>
-                </div>
-            </footer>
-        </section>
-    </div>
-
-    <!-- Reference Modal -->
-    <div id="refModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div style="text-align: center;">
-                <h3>References</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin: 10px 0;"><a href="https://github.com/6tail/lunar-python" target="_blank"
-                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">lunar-python
-                            (Lunar Calendar Logic)</a></li>
-                    <li style="margin: 10px 0;"><a href="https://fonts.google.com/specimen/Huninn" target="_blank"
-                            style="color: var(--theme-green); text-decoration: none; font-weight: bold;">Huninn Font
-                            (Google Fonts)</a></li>
-                </ul>
             </div>
         </div>
+
+        <!-- Footer -->
+        <div class="footer">好Lak-Jit與你同在的 {{ year }}</div>
     </div>
-
-    <script>
-        // Modal Logic
-        const modal = document.getElementById("refModal");
-        const btn = document.getElementById("refBtn");
-        const span = document.getElementsByClassName("close-btn")[0];
-
-        btn.onclick = function (e) {
-            e.preventDefault(); // Prevent default anchor behavior
-            modal.style.display = "block";
-        }
-
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 </body>
 
 </html>

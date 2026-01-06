@@ -1,558 +1,184 @@
-:root {
-    --bg-red: #C41E3A;
-    /* Cardinal Red */
-    --text-white: #FFFFFF;
-    --text-white-dim: rgba(255, 255, 255, 0.8);
-    --font-main: 'Noto Sans TC', sans-serif;
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-red);
-    color: var(--text-white);
-    font-family: var(--font-main);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
+    font-family: 'Noto Sans TC', sans-serif;
+    background-image: url('/static/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #000000;
     overflow: hidden;
-    box-sizing: border-box;
 }
 
-.calendar-container {
-    background-color: transparent;
-    /* No card background */
-    width: 100%;
-    max-width: 600px;
-    /* Keep consistent width constraint */
-    height: 100vh;
-    /* Full height as requested */
+/* Main Container - 100vh with flexbox centering */
+.container {
+    min-height: 100vh;
     max-height: 100vh;
-    padding: 20px;
-    display: flex;
-    flex-direction: column !important;
-    /* Force vertical stacking */
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-    /* V3 Minimalist Red */
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    position: relative;
-    overflow: hidden;
-}
-
-/* --- Top Bar --- */
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    width: 100%;
-}
-
-/* --- Top Bar (Centered) --- */
-.top-bar-centered {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 5px;
-    margin-bottom: 0;
-    width: 100%;
-    margin-top: 10px;
+    padding: 16px 24px;
+    text-align: center;
+    overflow: hidden;
 }
 
-.year-pill {
-    font-size: 1.2rem;
-    font-weight: 300;
-    opacity: 0.8;
-}
-
-.top-row {
+/* Content Wrapper - for vertical centering */
+.content-wrapper {
+    flex: 1;
     display: flex;
-    align-items: baseline;
-    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-.month-huge {
-    font-size: 2.5rem;
+/* Site Title */
+.site-title {
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.1em;
+}
+
+/* Date Header */
+.date-header {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+}
+
+/* Big Date - Auto-scaling */
+.big-date {
+    font-size: 12rem;
     font-weight: 900;
     line-height: 1;
+    margin-bottom: 0.25rem;
 }
 
-.month-label {
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 300;
+/* Weekday */
+.weekday {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
 }
 
-.sub-info {
-    display: flex;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: 300;
-    opacity: 0.9;
+/* Daily Quote */
+.daily-quote {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.2em;
 }
 
-.lunar-sub {
-    font-size: 0.9rem;
-    opacity: 0.7;
-    margin-top: 2px;
+/* Divider */
+.divider {
+    width: 100%;
+    max-width: 600px;
+    height: 1px;
+    background-color: #000000;
+    margin: 1.5rem 0;
 }
 
-.box-bordered {
-    /* Legacy override or removal */
-    display: none;
-}
-
-.top-right.box-bordered {
-    text-align: right;
-    align-items: flex-end;
-}
-
-.top-center {
-    display: none;
-    /* Hide year pill to simplify? Or keeping it minimal? Let's hide it for "minimalist" request or make it very subtle. User said "Center the main content vertically". Let's keep year but make it text only. */
-}
-
-/* Re-enable top center as simple text if needed, but for now user didn't explicitly say remove year. Let's keep it minimal. */
-font-weight: 700;
-margin-bottom: 5px;
-}
-
-
-/* --- Main Body --- */
-.main-body {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Activities Section */
+.activities {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
     align-items: center;
-    width: 600px;
-    height: 90vh;
-    padding: 0;
-    box-sizing: border-box;
-    /* V3 Minimalist Red */
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
 }
 
-/* Portrait Mobile Fix */
+.activity-row {
+    display: flex;
+    align-items: baseline;
+    text-align: left;
+    width: 100%;
+    max-width: 500px;
+}
+
+.activity-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.activity-list {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    text-align: left;
+}
+
+/* Footer */
+.footer {
+    font-size: 0.875rem;
+    font-weight: 300;
+    margin-top: auto;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .calendar-container {
-        width: 100%;
-        height: 100vh;
-        left: 0;
-        top: 0;
-        transform: none;
-        padding: 0 20px;
+    .big-date {
+        font-size: 8rem;
+    }
+
+    .daily-quote {
+        font-size: 1.5rem;
+    }
+
+    .date-header {
+        font-size: 1.25rem;
+    }
+
+    .activities {
+        gap: 1.5rem;
     }
 }
 
-.giant-date {
-    font-size: min(250px, 30vh);
-    font-weight: 900;
-    line-height: 0.9;
-    color: var(--text-white);
-    margin: -10px auto;
-    /* Auto margin for centering */
-    letter-spacing: -10px;
-    text-align: center;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+@media (max-width: 480px) {
+    .big-date {
+        font-size: 6rem;
+    }
+
+    .daily-quote {
+        font-size: 1.25rem;
+    }
+
+    .date-header {
+        font-size: 1.125rem;
+    }
+
+    .weekday {
+        font-size: 1.25rem;
+    }
+
+    .activity-title,
+    .activity-list {
+        font-size: 0.85rem;
+    }
+
+    .activities {
+        gap: 1rem;
+    }
 }
 
-.lunar-prominent {
-    font-size: 1.5rem;
-    color: var(--text-white);
-    font-weight: 300;
-    letter-spacing: 4px;
-    /* Elegant spacing */
-    margin-top: 10px;
-    opacity: 0.9;
+@media (max-width: 375px) {
+    .big-date {
+        font-size: 5rem;
+    }
+
+    .daily-quote {
+        font-size: 1.125rem;
+        letter-spacing: 0.15em;
+    }
 }
-
-/* --- Lower Section --- */
-.lower-section {
-    border: none;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    /* Elegant spacing */
-    margin-bottom: 40px;
-    /* Space for progress bar at bottom */
-}
-
-/* Info Bar (Hidden/Simplified) */
-.info-bar {
-    background: transparent;
-    color: var(--text-white);
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 1rem;
-    font-weight: 300;
-}
-
-.info-left,
-.info-right {
-    display: flex;
-    gap: 10px;
-}
-
-/* --- Luck Grid (Restored 4 Columns) --- */
-.luck-grid {
-    border: none;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-}
-
-.luck-cell {
-    flex: 1;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: none;
-}
-
-.good-cell {
-    border: none;
-}
-
-.bad-cell {
-    border: none;
-}
-
-.luck-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    /* Circle */
-    background: var(--text-white);
-    color: var(--bg-red);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.good-icon {
-    /* Same style */
-}
-
-.bad-icon {
-    /* Same style */
-}
-
-.luck-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    /* 4 Columns */
-    gap: 5px 10px;
-    color: var(--text-white);
-    font-size: 0.85rem;
-    font-weight: 300;
-    margin-top: 10px;
-    text-align: center;
-    width: 100%;
-    justify-items: center;
-}
-
-.luck-item {
-    white-space: nowrap;
-}
-
-/* Override coloring */
-.good-cell .luck-list {
-    color: var(--text-white);
-}
-
-.bad-cell .luck-list {
-    color: var(--text-white);
-}
-
-
-/* Footer Bar */
-.footer-bar {
-    border: none;
-    background: transparent;
-    color: var(--text-white-dim);
-    padding: 0;
-    gap: 10px;
-}
-
-.quote-container {
-    color: var(--text-white);
-    font-weight: 300;
-    font-size: 1rem;
-    letter-spacing: 1px;
-}
-
-.solar-term-box {
-    border: 1px solid var(--text-white-dim);
-    color: var(--text-white);
-    border-radius: 20px;
-    padding: 2px 10px;
-}
-
-.footer-signoff {
-    color: var(--text-white-dim) !important;
-    opacity: 0.5;
-    font-weight: 300;
-}
-
-/* --- Auspicious Indicator (New) --- */
-.auspicious-indicator {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-white);
-    margin-top: 5px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 15px;
-    border-radius: 20px;
-    display: inline-block;
-}
-
-/* --- Day Progress Bar (New) --- */
-.day-progress-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.2);
-    z-index: 999;
-}
-
-.day-progress-fill {
-    height: 100%;
-    background: #FFFFFF;
-    width: 0%;
-    /* JS will update */
-    transition: width 0.5s ease-in-out;
-}
-
-/* --- Download Button (New) --- */
-.share-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: transparent;
-    border: 1px solid var(--text-white);
-    color: var(--text-white);
-    padding: 5px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: var(--font-main);
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    z-index: 1000;
-}
-
-.share-btn:hover {
-    background: var(--text-white);
-    color: var(--bg-red);
-}
-
-/* --- Floating Info Button (Updated Style) --- */
-.floating-btn {
-    position: fixed;
-    border: 1px solid var(--text-white);
-    color: var(--text-white);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-
-    /* V2 Spec: Left Side */
-    left: 20px;
-    right: auto;
-
-    top: 25px;
-    /* Align with Share button roughly */
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1000;
-    transition: all 0.2s;
-}
-
-.floating-btn:hover {
-    background: var(--text-white);
-    color: var(--bg-red);
-    transform: none;
-}
-
-/* --- Slide Panel (Restored) --- */
-.slide-panel {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    right: -320px;
-    /* Hidden */
-    width: 300px;
-    height: auto;
-    max-height: 80vh;
-    background-color: var(--bg-red);
-    /* Match Theme */
-    border-left: 1px solid var(--text-white);
-    border-top: 1px solid var(--text-white);
-    border-bottom: 1px solid var(--text-white);
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
-    z-index: 1001;
-    transition: right 0.3s ease-in-out;
-    padding: 30px 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    overflow-y: auto;
-    color: var(--text-white);
-}
-
-.slide-panel.open {
-    right: 0;
-}
-
-.slide-panel h3 {
-    margin-top: 0;
-    border-bottom: 1px solid var(--text-white);
-    padding-bottom: 10px;
-    font-weight: 500;
-}
-
-.slide-panel p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    font-weight: 300;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-white);
-    cursor: pointer;
-}
-
-/* --- Share Modal --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-}
-
-.modal-overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.modal-content {
-    background: var(--bg-red);
-    border: 1px solid var(--text-white);
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content h3 {
-    margin-top: 0;
-    font-weight: 300;
-}
-
-.modal-content input {
-    width: 90%;
-    padding: 10px;
-    margin: 15px 0;
-    border: none;
-    border-bottom: 1px solid var(--text-white);
-    background: transparent;
-    color: var(--text-white);
-    font-size: 1rem;
-    text-align: center;
-    outline: none;
-}
-
-.modal-content input::placeholder {
-    color: var(--text-white-dim);
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-}
-
-.modal-actions button {
-    background: transparent;
-    border: 1px solid var(--text-white);
-    color: var(--text-white);
-    padding: 5px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-}
-
-.modal-actions button:hover {
-    background: var(--text-white);
-    color: var(--bg-red);
-}
-
-/* --- Custom Message Overlay --- */
-.custom-message-overlay {
-    position: absolute;
-    bottom: 80px;
-    /* Above footer */
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-white);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    display: none;
-    /* JS toggles this */
-    pointer-events: none;
-}
-
-```

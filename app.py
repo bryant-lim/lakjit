@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from lunar_python import Lunar, Solar
 from datetime import datetime
+import random
 
 app = Flask(__name__)
 
@@ -20,62 +21,49 @@ def index():
     solar = Solar.fromYmd(current_date.year, current_date.month, current_date.day)
     lunar = solar.getLunar()
 
-    # Calculate Month Size (Big/Small)
-    try:
-        # Try to create the 30th day of this lunar month
-        Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30)
-        month_size = "大" # Big (30 days)
-    except Exception:
-        month_size = "小" # Small (29 days)
+    # Weekday mapping to Traditional Chinese
+    weekday_map = {
+        0: '一', 1: '二', 2: '三', 3: '四', 
+        4: '五', 5: '六', 6: '日'
+    }
+    weekday_zh = f"星期{weekday_map[current_date.weekday()]}"
 
-    # Random Auspicious Quote
-    quotes = [
-        "财源广进", "生意兴隆", "五福临门", "大吉大利",
-        "心想事成", "身体健康", "万事如意", "吉祥如意",
-        "福寿安康", "步步高升", "招财进宝", "和气生财",
-        "金玉满堂", "吉星高照", "花开富贵", "国泰民安"
+    # Daily 4-character quotes
+    daily_quotes = [
+        "宜積極進取", "努力積極", "心想事成", "萬事如意",
+        "步步高升", "財源廣進", "吉祥如意", "福壽安康",
+        "大吉大利", "五福臨門", "招財進寶", "和氣生財",
+        "金玉滿堂", "花開富貴", "國泰民安", "身體健康"
     ]
-    import random
-    # Select 2 unique quotes
-    random_quotes = random.sample(quotes, 2)
+    daily_quote = random.choice(daily_quotes)
+
+    # Lunar date formatting - use numeric month
+    lunar_month_num = lunar.getMonth()
+    lunar_day_chinese = lunar.getDayInChinese()
+    
+    # Convert month number to Chinese numerals
+    month_chinese_map = {
+        1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六',
+        7: '七', 8: '八', 9: '九', 10: '十', 11: '十一', 12: '十二'
+    }
+    lunar_month_chinese = month_chinese_map.get(lunar_month_num, str(lunar_month_num))
+    lunar_date = f"農曆：{lunar_month_chinese}月{lunar_day_chinese}"
+    lunar_date_short = f"{lunar_month_chinese}月{lunar_day_chinese}"  # Without prefix
 
     # Data for template
     context = {
-        'gregorian_date': current_date.strftime('%Y-%m-%d'),
         'year': current_date.year,
-        'month': current_date.month, # Number (8)
-        'month_name': current_date.strftime('%B'), # Full name (August)
-        'day': current_date.day,
-        'weekday': current_date.strftime('%A'),
-        
-        # Lunar Data
-        'lunar_year_chinese': lunar.getYearInGanZhi() + ' (' + lunar.getYearShengXiao() + ')', # e.g. Bing-Yin (Tiger)
-        'lunar_month_chinese': lunar.getMonthInChinese(),
-        'lunar_month_size': month_size,
-        'lunar_day_chinese': lunar.getDayInChinese(),
-        'lunar_date_full': f"{lunar.getMonthInChinese()}月{lunar.getDayInChinese()}", # Requested format: Month + Day
-        
-        # Lucky/Unlucky
-        'good_for': lunar.getDayYi(), # List
-        'bad_for': lunar.getDayJi(),  # List
-        
-        # Solar Terms
-        'solar_term': lunar.getJieQi(), 
-        
-        # Aesthetics helpers
-        'season': get_season(current_date.month),
-        
-        # New Feature: List of quotes
-        'random_quotes': random_quotes
+        'month': current_date.month,
+        'day': f"{current_date.day:02d}",  # Zero-padded day
+        'weekday_zh': weekday_zh,
+        'daily_quote': daily_quote,
+        'lunar_date': lunar_date,
+        'lunar_date_short': lunar_date_short,
+        'good_for': lunar.getDayYi()[:4],  # Limit to 4 items
+        'bad_for': lunar.getDayJi()[:4],   # Limit to 4 items
     }
 
     return render_template('index.html', **context)
 
-def get_season(month):
-    if 3 <= month <= 5: return 'Spring'
-    if 6 <= month <= 8: return 'Summer'
-    if 9 <= month <= 11: return 'Autumn'
-    return 'Winter'
-
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
