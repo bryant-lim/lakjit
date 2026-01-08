@@ -28,14 +28,39 @@ def index():
     }
     weekday_zh = f"星期{weekday_map[current_date.weekday()]}"
 
-    # Daily 4-character quotes
+    # Daily quote - Deterministic selection based on date (100+ quotes)
     daily_quotes = [
-        "宜積極進取", "努力積極", "心想事成", "萬事如意",
-        "步步高升", "財源廣進", "吉祥如意", "福壽安康",
-        "大吉大利", "五福臨門", "招財進寶", "和氣生財",
-        "金玉滿堂", "花開富貴", "國泰民安", "身體健康"
+        '吉祥如意', '萬事大吉', '心想事成', '五福臨門', '招財進寶',
+        '和氣生財', '金玉滿堂', '花開富貴', '國泰民安', '身體健康',
+        '步步高升', '大吉大利', '財源廣進', '恭喜發財', '年年有餘',
+        '龍馬精神', '鴻運當頭', '福星高照', '萬事如意', '事事順心',
+        '平安喜樂', '闔家歡樂', '福壽雙全', '福如東海', '壽比南山',
+        '笑口常開', '青春永駐', '前程似錦', '錦繡前程', '鵬程萬里',
+        '一帆風順', '馬到成功', '功成名就', '名列前茅', '出類拔萃',
+        '學業進步', '才高八斗', '學富五車', '滿腹經綸', '博學多才',
+        '事業有成', '飛黃騰達', '平步青雲', '扶搖直上', '蒸蒸日上',
+        '日進斗金', '財運亨通', '生意興隆', '貨如輪轉', '客似雲來',
+        '家和萬事興', '闔家平安', '天倫之樂', '其樂融融', '幸福美滿',
+        '百年好合', '白頭偕老', '永結同心', '琴瑟和鳴', '鸞鳳和鳴',
+        '喜氣洋洋', '春風得意', '眉開眼笑', '喜上眉梢', '喜氣盈門',
+        '萬象更新', '欣欣向榮', '蓬勃發展', '日新月異', '與時俱進',
+        '龍騰虎躍', '虎虎生威', '生龍活虎', '龍飛鳳舞', '龍鳳呈祥',
+        '紫氣東來', '瑞氣千條', '祥雲繚繞', '福氣滿堂', '喜氣沖天',
+        '四季平安', '歲歲平安', '出入平安', '一路平安', '竹報平安',
+        '吉星高照', '福星拱照', '吉慶有餘', '吉人天相', '天賜良緣',
+        '心曠神怡', '神采奕奕', '精神煥發', '容光煥發', '煥然一新',
+        '如意吉祥', '稱心如意', '萬事勝意', '諸事大吉', '百事可樂',
+        '六六大順', '七星高照', '八方來財', '九九歸一', '十全十美',
+        '百福駢臻', '千祥雲集', '萬事亨通', '億萬富翁', '財源滾滾'
     ]
-    daily_quote = random.choice(daily_quotes)
+    
+    # Deterministic quote selection based on current date
+    today = datetime.now()
+    date_string = f"{today.year}-{today.month}-{today.day}"
+    # Simple hash function
+    hash_value = sum(ord(c) * (i + 1) for i, c in enumerate(date_string))
+    quote_index = hash_value % len(daily_quotes)
+    daily_quote = daily_quotes[quote_index]
 
     # Lunar date formatting - use numeric month
     lunar_month_num = lunar.getMonth()
