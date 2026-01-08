@@ -50,6 +50,28 @@ def index():
     lunar_date = f"農曆：{lunar_month_chinese}月{lunar_day_chinese}"
     lunar_date_short = f"{lunar_month_chinese}月{lunar_day_chinese}"  # Without prefix
 
+    # Calculate day progress (0-100% from midnight to 11:59 PM)
+    current_time = datetime.now()
+    seconds_since_midnight = (current_time.hour * 3600 + 
+                             current_time.minute * 60 + 
+                             current_time.second)
+    total_seconds_in_day = 24 * 3600
+    day_progress = (seconds_since_midnight / total_seconds_in_day) * 100
+
+    # Calculate countdown to Chinese New Year (Feb 17, 2026)
+    cny_date = datetime(2026, 2, 17, 0, 0, 0)
+    time_remaining = cny_date - current_time
+    days_remaining = time_remaining.days
+    hours_remaining = time_remaining.seconds // 3600
+    minutes_remaining = (time_remaining.seconds % 3600) // 60
+    seconds_remaining = time_remaining.seconds % 60
+    # Target timestamp in milliseconds for JavaScript
+    cny_timestamp = int(cny_date.timestamp() * 1000)
+
+    # Detect night mode (8 PM - 7 AM)
+    current_hour = current_time.hour
+    is_night_mode = current_hour >= 20 or current_hour < 7
+
     # Data for template
     context = {
         'year': current_date.year,
@@ -61,6 +83,13 @@ def index():
         'lunar_date_short': lunar_date_short,
         'good_for': lunar.getDayYi()[:4],  # Limit to 4 items
         'bad_for': lunar.getDayJi()[:4],   # Limit to 4 items
+        'day_progress': round(day_progress, 2),  # Percentage of day elapsed
+        'countdown_days': days_remaining,
+        'countdown_hours': hours_remaining,
+        'countdown_minutes': minutes_remaining,
+        'countdown_seconds': seconds_remaining,
+        'cny_timestamp': cny_timestamp,
+        'is_night_mode': is_night_mode,
     }
 
     return render_template('index.html', **context)

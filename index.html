@@ -4,305 +4,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fatt Choy Chinese Calendar</title>
-    <!-- Noto Sans TC Import -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+    <title>Vintage Chinese Calendar</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="static/style.css">
-    <!-- Lunar JS CDN -->
+
+    <!-- Lunar JS -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="green-theme">
-    <div class="calendar-container">
+<body>
 
-        <!-- Full Lunar Date -->
-        <div id="lunar-date-full" class="lunar-prominent"></div>
-        <!-- Auspicious Indicator will be inserted here by JS -->
-    </div>
-
-    <!-- Top Bar (Centered Stack) -->
-    <div class="top-bar-centered">
-        <div id="year-pill" class="year-pill"></div>
-        <div class="top-row">
-            <span id="month-name" class="month-huge"></span>
-            <span class="month-label">Month</span>
-        </div>
-        <div class="sub-info">
-            <span id="weekday-en" class="en-weekday"></span>
-            <span class="divider">|</span>
-            <span id="weekday-zh"></span>
-        </div>
-        <div id="lunar-year-ganzhi" class="lunar-sub"></div>
-    </div>
-
-    <!-- Main Body -->
-    <div class="main-body">
-        <!-- Giant Date (Centered) -->
-        <div id="giant-day" class="giant-date"></div>
-
-        <!-- Full Lunar Date -->
-        <div id="lunar-date-full" class="lunar-prominent"></div>
-        <!-- Auspicious Indicator will be inserted here by JS -->
-    </div>
-    <!-- Lower Section: Luck Grid -->
-    <div class="lower-section">
-        <div class="luck-grid">
-            <!-- Yi (Good) -->
-            <div class="luck-cell good-cell">
-                <div class="luck-icon good-icon">宜</div>
-                <div id="yi-list" class="luck-list"></div>
+    <div class="calendar-paper">
+        <!-- Header Section -->
+        <header class="v-header">
+            <!-- Left: Month English -->
+            <div class="header-side left">
+                <div class="en-month" id="en-month">JANUARY</div>
+                <div class="side-couplet">國運安定百事好</div>
             </div>
 
-            <!-- Ji (Bad) -->
-            <div class="luck-cell bad-cell">
-                <div class="luck-icon bad-icon">忌</div>
-                <div id="ji-list" class="luck-list"></div>
+            <!-- Center: Year Box -->
+            <div class="header-center">
+                <div class="year-box" id="year-box">2026</div>
+            </div>
+
+            <!-- Right: Month Chinese -->
+            <div class="header-side right">
+                <div class="zh-month" id="zh-month">1月大</div>
+                <div class="side-couplet">時際芳春萬象新</div>
+            </div>
+        </header>
+
+        <!-- Main Date Section -->
+        <main class="v-main-date">
+            <div class="giant-red-num" id="day-num">
+                2
+                <div class="zodiac-overlay" id="zodiac-overlay">
+                    <!-- Icons injected by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Middle Banners -->
+        <div class="v-middle-banners">
+            <!-- Lunar Date -->
+            <div class="banner-box left">
+                <div class="banner-content">
+                    <span class="banner-label">農曆</span>
+                    <span id="lunar-date-text">--</span>
+                </div>
+            </div>
+
+            <!-- Solar Term / Festival -->
+            <div class="banner-box center">
+                <div class="banner-content">
+                    <span id="solar-term-text">--</span>
+                </div>
+            </div>
+
+            <!-- Weekday -->
+            <div class="banner-box right">
+                <div class="banner-content">
+                    <span class="zh-weekday" id="zh-weekday">--</span>
+                    <span class="en-weekday" id="en-weekday">--</span>
+                </div>
             </div>
         </div>
 
-        <!-- Footer Info (Quotes, etc) -->
-        <div class="footer-bar">
-            <div id="solar-term-box" class="solar-term-box" style="display: none;"></div>
-            <div id="lunar-month-info" style="display: none;"></div> <!-- Hidden/Merged -->
-            <!-- Quote -->
-            <div id="quote-container" class="quote-container"></div>
-            <!-- Signoff -->
-            <div class="footer-signoff">Fatt Choy Calendar</div>
-        </div>
-    </div>
+        <!-- Bottom Grid Section -->
+        <footer class="v-bottom-section">
+            <div class="bottom-container">
+                <!-- Left: Yi (Good) -->
+                <div class="col-yi">
+                    <div class="yi-ji-circle">宜</div>
+                    <ul id="yi-list" class="luck-list"></ul>
+                </div>
 
-    <!-- Share Button -->
-    <button id="share-btn" class="share-btn"><i class="fas fa-share-alt"></i> Share as Image</button>
+                <!-- Center: BaZi and Grid -->
+                <div class="col-center-grid">
+                    <!-- Populated by JS -->
+                </div>
 
-    <!-- Info Button (Left Side) -->
-    <div id="info-btn" class="floating-btn"><i class="fas fa-info"></i></div>
-
-    <!-- Slide-out Panel (Keep structure but style handled by CSS) -->
-    <div id="info-panel" class="slide-panel">
-        <button id="close-panel-btn" class="close-btn">&times;</button>
-        <h3>About Lak Jit</h3>
-        <p>In Hokkien, <strong>lak jit</strong> (also spelled la jit) most commonly refers to a calendar.
-        </p>
-        <p>The term is derived from the Chinese characters <strong>日历</strong> (Mandarin: rìlì), which
-            literally
-            translates to "day record" or "calendar".</p>
-    </div>
-
-    <!-- Day Progress Bar -->
-    <div class="day-progress-container">
-        <div class="day-progress-fill" id="day-progress"></div>
-    </div>
-
-    <!-- Share Modal -->
-    <div id="share-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Add a Message</h3>
-            <input type="text" id="share-message-input" placeholder="e.g. Happy New Year!" maxlength="30">
-            <div class="modal-actions">
-                <button id="cancel-share-btn">Cancel</button>
-                <button id="confirm-share-btn">Download Image</button>
+                <!-- Right: Ji (Bad) -->
+                <div class="col-ji">
+                    <div class="yi-ji-circle red">忌</div>
+                    <ul id="ji-list" class="luck-list"></ul>
+                </div>
             </div>
-        </div>
+        </footer>
     </div>
 
-    <!-- Hidden Container for Custom Message Overlay -->
-    <div id="custom-message-overlay" class="custom-message-overlay"></div>
-
-    <!-- html2canvas CDN -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-    <!-- Main Logic Script (Including V3 Features) -->
+    <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Gregorian Date Setup
-            const now = new Date();
-            const year = now.getFullYear();
-            // Use Numeric Month (1-12) as requested
-            const monthName = (now.getMonth() + 1).toString();
-            const day = now.getDate();
-            const weekdayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
+            // Configuration: Target Date (Jan 2, 2026)
+            // To use today's date, uncomment: const date = new Date();
+            const date = new Date('2026-01-02T12:00:00');
 
-            const weekdayMap = {
-                'Monday': '一', 'Tuesday': '二', 'Wednesday': '三', 'Thursday': '四',
-                'Friday': '五', 'Saturday': '六', 'Sunday': '日'
-            };
-            const weekdayZh = '星期' + weekdayMap[weekdayEn];
+            const solar = Solar.fromDate(date);
+            const lunar = Lunar.fromDate(date);
 
-            // Render Gregorian
-            document.getElementById('month-name').textContent = monthName;
+            // 1. Header Info
+            const monthsEn = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+            document.getElementById('en-month').textContent = monthsEn[solar.getMonth() - 1];
+            document.getElementById('year-box').textContent = solar.getYear();
 
-            const yearPill = document.getElementById('year-pill');
-            if (yearPill) yearPill.textContent = year;
+            // Lunar Month + Size approximation or just Month
+            // lunar.getMonthInChinese() returns "正月", "二月" etc.
+            // Check if big month: lunar.getDayCount()
+            // lunar.getDaysInMonth()? No, need to calculate next month diff manually or trust generic "Month"
+            document.getElementById('zh-month').textContent = lunar.getMonthInChinese() + "月" + (lunar.getDayCount && lunar.getDayCount() > 29 ? "大" : (lunar.getDayCount ? "小" : ""));
 
-            document.getElementById('giant-day').textContent = day;
-            document.getElementById('weekday-en').textContent = weekdayEn;
-            document.getElementById('weekday-zh').textContent = weekdayZh;
+            // 2. Main Date
+            document.getElementById('day-num').childNodes[0].nodeValue = solar.getDay();
 
-            // 2. Lunar Calculation
-            const lunar = Lunar.fromDate(now);
+            // Zodiac Overlay
+            const zodiac = lunar.getYearShengXiao(); // "蛇" for 2025/2026 overlapping
+            const zodiacIcon = document.getElementById('zodiac-overlay');
+            zodiacIcon.innerHTML = '';
+            const zSpan = document.createElement('span');
+            zSpan.className = 'z-icon';
+            zSpan.style.opacity = '0.08';
+            zSpan.style.fontSize = '15rem';
+            zSpan.style.top = '50%';
+            zSpan.style.left = '50%';
+            zSpan.style.transform = 'translate(-50%, -50%)';
+            const zodiacMap = { '鼠': '🐀', '牛': '🐂', '虎': '🐅', '兔': '🐇', '龙': '🐉', '蛇': '🐍', '马': '🐎', '羊': '🐐', '猴': '🐒', '鸡': '🐓', '狗': '🐕', '猪': '🐖' };
+            zSpan.textContent = zodiacMap[zodiac] || '🧧';
+            zodiacIcon.appendChild(zSpan);
 
-            // Lunar Year: GanZhi + Zodiac
-            const lunarYear = lunar.getYearInGanZhi() + ' (' + lunar.getYearShengXiao() + ')';
-            document.getElementById('lunar-year-ganzhi').textContent = lunarYear;
-
-            // Lunar Month & Size
-            const lunarMonthName = lunar.getMonthInChinese();
-            // Size Logic
-            let isBig = '小';
-            try {
-                if (Lunar.fromYmd(lunar.getYear(), lunar.getMonth(), 30).getMonth() === lunar.getMonth()) {
-                    isBig = '大';
-                }
-            } catch (e) { }
-
-            document.getElementById('lunar-month-info').textContent = lunarMonthName + '月' + isBig;
-
-            // Numeric Month Helper
-            function getNumericChineseMonth(m) {
-                const map = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-                return map[m - 1] || '';
-            }
-            const numericMonth = getNumericChineseMonth(lunar.getMonth());
-            const lunarDayName = lunar.getDayInChinese();
-
-            // Format: 農曆 + Month + 月 + Day + 日
-            document.getElementById('lunar-date-full').textContent = '農曆' + numericMonth + '月' + lunarDayName + '日';
-
-            // --- V3 Feature: Auspicious Indicator ---
-            const auspiciousPhrases = [
-                'Swee! Good for big plans',
-                'Heng Ong Huat! Great for business',
-                'Steady lah. Good for travel',
-                'Clean house today for luck',
-                'Beautiful day for a haircut'
-            ];
-            // Rotate based on day of month
-            const phraseIndex = day % auspiciousPhrases.length;
-            const todayAus = auspiciousPhrases[phraseIndex];
-
-            // Create or update indicator element
-            let ausContainer = document.getElementById('auspicious-indicator');
-            if (!ausContainer) {
-                ausContainer = document.createElement('div');
-                ausContainer.id = 'auspicious-indicator';
-                ausContainer.className = 'auspicious-indicator';
-                // Insert after lunar date
-                document.getElementById('lunar-date-full').after(ausContainer);
-            }
-            ausContainer.textContent = todayAus;
-
+            // 3. Middle Banners
+            document.getElementById('lunar-date-text').textContent = lunar.getMonthInChinese() + "月" + lunar.getDayInChinese();
 
             // Solar Term
             const jieQi = lunar.getJieQi();
-            const termBox = document.getElementById('solar-term-box');
-            if (jieQi) {
-                termBox.textContent = jieQi;
-                termBox.style.display = 'block';
-            }
+            document.getElementById('solar-term-text').textContent = jieQi ? jieQi : "冬月安康"; // Fallback text
 
-            // 3. Yi / Ji Lists
-            const yiContainer = document.getElementById('yi-list');
-            lunar.getDayYi().slice(0, 4).forEach(item => { // Limit to 4 for minimal look
-                const span = document.createElement('span');
-                span.textContent = item;
-                yiContainer.appendChild(span);
-            });
+            // Weekday
+            const weekEn = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+            const weekZh = ["日", "一", "二", "三", "四", "五", "六"];
+            document.getElementById('zh-weekday').textContent = "星期" + weekZh[solar.getWeek()];
+            document.getElementById('en-weekday').textContent = weekEn[solar.getWeek()];
 
-            const jiContainer = document.getElementById('ji-list');
-            lunar.getDayJi().slice(0, 4).forEach(item => { // Limit to 4
-                const span = document.createElement('span');
-                span.textContent = item;
-                jiContainer.appendChild(span);
-            });
-
-            // 4. Quotes System (Minimal)
-            const quotes = ["大吉大利", "万事如意", "心想事成", "身体健康", "恭喜发财", "年年有余", "步步高升", "一帆风顺"];
-            const selectedQuotes = quotes.sort(() => 0.5 - Math.random()).slice(0, 2);
-            const quoteContainer = document.getElementById('quote-container');
-            selectedQuotes.forEach(q => {
-                const span = document.createElement('span');
-                span.className = 'quote-text';
-                span.textContent = q;
-                quoteContainer.appendChild(span);
-            });
-
-            // --- V3 Feature: Day Progress Bar ---
-            function updateProgressBar() {
-                const now = new Date();
-                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM
-                const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // 11:59:59 PM
-                const total = end - start;
-                const current = now - start;
-                const percentage = (current / total) * 100;
-                document.getElementById('day-progress').style.width = percentage + '%';
-            }
-            updateProgressBar();
-            setInterval(updateProgressBar, 60000); // Update every minute
-
-            // Logic for Buttons (Info & Share)
-            const infoBtn = document.getElementById('info-btn');
-            const infoPanel = document.getElementById('info-panel');
-            const closeBtn = document.getElementById('close-panel-btn');
-
-            if (infoBtn) infoBtn.addEventListener('click', () => infoPanel.classList.add('open'));
-            if (closeBtn) closeBtn.addEventListener('click', () => infoPanel.classList.remove('open'));
-            document.addEventListener('click', (e) => {
-                if (infoPanel && infoBtn && !infoPanel.contains(e.target) && !infoBtn.contains(e.target)) {
-                    infoPanel.classList.remove('open');
-                }
-            });
-
-            // --- V3 Feature: Share as Image & Modal ---
-            const shareBtn = document.getElementById('share-btn');
-            const shareModal = document.getElementById('share-modal');
-            const cancelShare = document.getElementById('cancel-share-btn');
-            const confirmShare = document.getElementById('confirm-share-btn');
-            const messageInput = document.getElementById('share-message-input');
-            const messageOverlay = document.getElementById('custom-message-overlay');
-
-            shareBtn.addEventListener('click', () => {
-                shareModal.classList.add('show');
-                messageInput.value = '';
-                messageInput.focus();
-            });
-
-            cancelShare.addEventListener('click', () => {
-                shareModal.classList.remove('show');
-            });
-
-            confirmShare.addEventListener('click', () => {
-                const customMsg = messageInput.value.trim();
-                shareModal.classList.remove('show');
-
-                // Show message overlay if exists
-                if (customMsg) {
-                    messageOverlay.textContent = customMsg;
-                    messageOverlay.style.display = 'block';
-                }
-
-                // Hide interactive elements before capture
-                shareBtn.style.display = 'none';
-                infoBtn.style.display = 'none';
-                if (infoPanel) infoPanel.style.display = 'none';
-
-                // Capture
-                html2canvas(document.body, {
-                    backgroundColor: '#C41E3A', // Force theme color
-                    scale: 2 // High quality
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'lakjit-calendar.png';
-                    link.href = canvas.toDataURL();
-                    link.click();
-
-                    // Restore elements
-                    shareBtn.style.display = '';
-                    infoBtn.style.display = '';
-                    if (infoPanel) infoPanel.style.display = '';
-                    messageOverlay.style.display = 'none';
+            // 4. Yi / Ji Lists
+            const yiItems = lunar.getDayYi();
+            const jiItems = lunar.getDayJi();
+            const populateList = (element, items) => {
+                element.innerHTML = '';
+                items.slice(0, 6).forEach(item => { // limit to 6
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    element.appendChild(li);
                 });
-            });
+            };
+            populateList(document.getElementById('yi-list'), yiItems);
+            populateList(document.getElementById('ji-list'), jiItems);
+
+            // 5. Center Grid & BaZi
+            const centerCol = document.querySelector('.col-center-grid');
+            centerCol.innerHTML = '';
+
+            // BaZi Display
+            const baziDiv = document.createElement('div');
+            baziDiv.className = 'bazi-display';
+            baziDiv.style.borderBottom = '1px solid var(--ink-red)';
+            baziDiv.style.padding = '5px';
+            baziDiv.style.textAlign = 'center';
+            baziDiv.style.background = '#fff8e7';
+            baziDiv.style.display = 'flex';
+            baziDiv.style.flexDirection = 'column';
+            baziDiv.style.justifyContent = 'center';
+            baziDiv.style.height = '60px'; // fixed height for BaZi
+
+            const baziText = document.createElement('div');
+            baziText.style.fontSize = '1.3rem';
+            baziText.style.fontWeight = 'bold';
+            baziText.style.color = 'var(--ink-black)';
+            baziText.style.fontFamily = 'var(--font-calligraphy)';
+
+            // Get 3 Pillars: Year, Month, Day
+            const yGZ = lunar.getYearInGanZhi();
+            const mGZ = lunar.getMonthInGanZhi();
+            const dGZ = lunar.getDayInGanZhi();
+            baziText.textContent = `${yGZ} ${mGZ} ${dGZ}`;
+            baziDiv.appendChild(baziText);
+
+            const directions = document.createElement('div');
+            directions.style.fontSize = '0.7rem';
+            directions.style.color = 'var(--ink-green)';
+            directions.textContent = `喜${lunar.getPositionXi()} 财${lunar.getPositionCai()} (今日八字)`;
+            baziDiv.appendChild(directions);
+
+            centerCol.appendChild(baziDiv);
+
+            // Time Grid (4 columns x 3 rows = 12 cells)
+            const timeGrid = document.createElement('div');
+            timeGrid.className = 'fortune-grid';
+            timeGrid.style.display = 'grid';
+            timeGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            // Ensure grid fills remaining space
+            timeGrid.style.height = 'calc(100% - 70px)';
+            timeGrid.style.width = '100%';
+
+            const zhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+
+            // Huang Dao (Yellow Path) Luck Calculation
+            // 1. Get Day Branch Index (0=Zi, 1=Chou, ... 11=Hai)
+            const dayZhiIndex = lunar.getDayZhiIndex();
+
+            // 2. Determine "QingLong" (Blue Dragon) Start Offset
+            // Mapping (DayZhi % 6) -> StartOffset
+            const offsetMap = {
+                0: 8, // Zi -> Shen
+                1: 10, // Chou -> Xu
+                2: 0, // Yin -> Zi
+                3: 2, // Mao -> Yin
+                4: 4, // Chen -> Chen
+                5: 6  // Si -> Wu
+            };
+            const qingLongStart = offsetMap[dayZhiIndex % 6];
+
+            // 3. The 12 Deities Cycle (1=Good, 0=Bad)
+            const deityLuck = [1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0];
+
+            for (let i = 0; i < 12; i++) {
+                const el = document.createElement('div');
+                el.className = 'grid-cell time-cell';
+                el.style.display = 'flex';
+                el.style.flexDirection = 'column';
+                el.style.justifyContent = 'center';
+                el.style.alignItems = 'center';
+                el.style.border = '1px solid #ddd';
+                el.style.fontSize = '0.9rem';
+
+                const zhiName = document.createElement('span');
+                zhiName.textContent = zhi[i];
+                zhiName.style.fontWeight = 'bold';
+
+                // Calculate Luck
+                let cycleIdx = (i - qingLongStart + 12) % 12;
+                const isGood = deityLuck[cycleIdx] === 1;
+
+                const luck = document.createElement('span');
+                luck.textContent = isGood ? '吉' : '凶';
+                luck.className = isGood ? 'luck-good' : 'luck-bad';
+
+                el.appendChild(zhiName);
+                el.appendChild(luck);
+                timeGrid.appendChild(el);
+            }
+            centerCol.appendChild(timeGrid);
         });
     </script>
 </body>

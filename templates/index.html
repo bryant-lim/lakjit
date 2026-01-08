@@ -12,13 +12,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body{% if is_night_mode %} class="night-mode" {% endif %}>
     <div class="container">
         <!-- Site Title -->
         <div class="site-title">Lak-Jit</div>
 
         <!-- Content Wrapper for vertical centering -->
         <div class="content-wrapper">
+            <!-- Countdown Timer -->
+            <div class="countdown-timer">
+                <span id="countdown-text">距離農曆新年還有
+                    <span class="countdown-numbers" id="countdown-days">{{ countdown_days }}</span> 天
+                    <span class="countdown-numbers" id="countdown-hours">{{ countdown_hours }}</span> 小時
+                    <span class="countdown-numbers" id="countdown-minutes">{{ countdown_minutes }}</span> 分
+                    <span class="countdown-numbers" id="countdown-seconds">{{ countdown_seconds }}</span> 秒
+                </span>
+            </div>
+
             <!-- Date Header -->
             <div class="date-header">{{ year }} 年 {{ month }} 月</div>
 
@@ -28,32 +38,73 @@
             <!-- Weekday with Lunar Date -->
             <div class="weekday">{{ weekday_zh }} | {{ lunar_date_short }}</div>
 
-            <!-- Daily Quote -->
-            <div class="daily-quote">{{ daily_quote }}</div>
+
 
             <!-- Divider -->
             <div class="divider"></div>
 
-            <!-- Activities Section -->
+            <!-- Activities Section (Yi & Ji inline) -->
             <div class="activities">
-                <div class="activity-row">
-                    <span class="activity-title">宜：</span>
-                    <span class="activity-list">
-                        {% for item in good_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
-                    </span>
-                </div>
-                <div class="activity-row">
-                    <span class="activity-title">忌：</span>
-                    <span class="activity-list">
-                        {% for item in bad_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
-                    </span>
-                </div>
+                宜：{% for item in good_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %} | 忌：{% for item in
+                bad_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
             </div>
+
+            <!-- Daily Quote -->
+            <div class="daily-quote">{{ daily_quote }}</div>
         </div>
 
         <!-- Footer -->
         <div class="footer">好Lak-Jit與你同在的 {{ year }}</div>
+
+        <!-- Day Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ day_progress }}%"></div>
+        </div>
     </div>
-</body>
+
+    <script>
+        // Real-time countdown update
+        const cnyTimestamp = {{ cny_timestamp }};
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeRemaining = cnyTimestamp - now;
+
+            if (timeRemaining > 0) {
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown-days').textContent = days;
+                document.getElementById('countdown-hours').textContent = hours;
+                document.getElementById('countdown-minutes').textContent = minutes;
+                document.getElementById('countdown-seconds').textContent = seconds;
+            } else {
+                document.getElementById('countdown-text').textContent = '農曆新年快樂！';
+            }
+        }
+
+        // Update every second
+        setInterval(updateCountdown, 1000);
+
+        // Client-side night mode detection
+        function checkNightMode() {
+            const now = new Date();
+            const hour = now.getHours();
+            const isNight = hour >= 20 || hour < 7;
+
+            if (isNight) {
+                document.body.classList.add('night-mode');
+            } else {
+                document.body.classList.remove('night-mode');
+            }
+        }
+
+        // Check night mode on load and every minute
+        checkNightMode();
+        setInterval(checkNightMode, 60000); // Check every minute
+    </script>
+    </body>
 
 </html>
