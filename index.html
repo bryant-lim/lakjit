@@ -62,6 +62,13 @@
         <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
 
+    <!-- Lunar Notification Banner -->
+    <div class="lunar-notification" id="lunar-notification" style="display: none;">
+        <img src="static/dark-incense.png" alt="incense" class="incense-icon" id="incense-icon">
+        <span class="notification-text" id="notification-text"></span>
+        <button class="notification-close" id="notification-close" aria-label="Close notification">×</button>
+    </div>
+
     <script>
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
@@ -69,6 +76,7 @@
             updateCountdown();
             updateDayProgress();
             checkNightMode();
+            checkLunarNotification();
 
             // Update countdown every second
             setInterval(updateCountdown, 1000);
@@ -78,6 +86,12 @@
 
             // Check night mode every minute
             setInterval(checkNightMode, 60000);
+
+            // Check lunar notification every hour
+            setInterval(checkLunarNotification, 3600000);
+
+            // Setup notification close button
+            document.getElementById('notification-close').addEventListener('click', dismissNotification);
         });
 
         // Update calendar with current date
@@ -156,9 +170,113 @@
 
             if (isNight) {
                 document.body.classList.add('night-mode');
+                // Switch to white incense icon in night mode
+                document.getElementById('incense-icon').src = 'static/white-incense.png';
             } else {
                 document.body.classList.remove('night-mode');
+                // Switch to dark incense icon in day mode
+                document.getElementById('incense-icon').src = 'static/dark-incense.png';
             }
+        }
+
+        // Lunar notification system
+        function checkLunarNotification() {
+            // 2026 Lunar Calendar: 初一 (Chu 1) and 初十五 (Chu 15) dates
+            const lunarDates = [
+                { date: '2026-02-17', type: '初一', name: 'CNY' },
+                { date: '2026-03-03', type: '初十五' },
+                { date: '2026-03-18', type: '初一' },
+                { date: '2026-04-01', type: '初十五' },
+                { date: '2026-04-17', type: '初一' },
+                { date: '2026-05-01', type: '初十五' },
+                { date: '2026-05-16', type: '初一' },
+                { date: '2026-05-30', type: '初十五' },
+                { date: '2026-06-15', type: '初一' },
+                { date: '2026-06-29', type: '初十五' },
+                { date: '2026-07-14', type: '初一' },
+                { date: '2026-07-28', type: '初十五' },
+                { date: '2026-08-12', type: '初一' },
+                { date: '2026-08-26', type: '初十五' },
+                { date: '2026-09-11', type: '初一' },
+                { date: '2026-09-25', type: '初十五' },
+                { date: '2026-10-10', type: '初一' },
+                { date: '2026-10-24', type: '初十五' },
+                { date: '2026-11-09', type: '初一' },
+                { date: '2026-11-23', type: '初十五' },
+                { date: '2026-12-09', type: '初一' },
+                { date: '2026-12-23', type: '初十五' },
+                { date: '2027-01-19', type: '初一' },
+                { date: '2027-02-02', type: '初十五' }
+            ];
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (const lunarDate of lunarDates) {
+                const targetDate = new Date(lunarDate.date);
+                targetDate.setHours(0, 0, 0, 0);
+
+                const daysDiff = Math.floor((targetDate - today) / (1000 * 60 * 60 * 24));
+
+                // Check if notification was already dismissed for this event
+                const storageKey = `lunar-notification-${lunarDate.date}`;
+                const isDismissed = localStorage.getItem(storageKey);
+
+                if (isDismissed) {
+                    continue; // Skip if already dismissed
+                }
+
+                let message = '';
+
+                // T-minus 2 days
+                if (daysDiff === 2) {
+                    message = `提醒：2天後是${lunarDate.type}`;
+                }
+                // T-minus 1 day
+                else if (daysDiff === 1) {
+                    message = `提醒：明天是${lunarDate.type}`;
+                }
+
+                if (message) {
+                    showNotification(message, lunarDate.date);
+                    return; // Show only one notification at a time
+                }
+            }
+
+            // Hide notification if no upcoming events
+            hideNotification();
+        }
+
+        function showNotification(message, eventDate) {
+            const notification = document.getElementById('lunar-notification');
+            const notificationText = document.getElementById('notification-text');
+
+            notificationText.textContent = message;
+            notification.style.display = 'flex';
+            notification.dataset.eventDate = eventDate; // Store event date for dismissal
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('lunar-notification');
+            notification.style.display = 'none';
+        }
+
+        function dismissNotification() {
+            const notification = document.getElementById('lunar-notification');
+            const eventDate = notification.dataset.eventDate;
+
+            if (eventDate) {
+                // Store dismissal in local storage
+                const storageKey = `lunar-notification-${eventDate}`;
+                localStorage.setItem(storageKey, 'true');
+            }
+
+            // Hide notification with fade out
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                hideNotification();
+                notification.style.opacity = '1'; // Reset for next time
+            }, 300);
         }
     </script>
 </body>
