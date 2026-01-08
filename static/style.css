@@ -631,3 +631,24 @@ body.night-mode .share-button svg {
     letter-spacing: 0.2em;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+
+/* ============================================
+   YI & JI ICONS
+   ============================================ */
+
+/* Yi and Ji Icon Images */
+.yi-ji-icon {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    margin: 0 4px;
+    display: inline-block;
+}
+
+/* Responsive sizing for mobile */
+@media (max-width: 768px) {
+    .yi-ji-icon {
+        height: 18px;
+        width: 18px;
+    }
+}

@@ -69,7 +69,9 @@
 
             <!-- Activities Section (Yi & Ji inline) -->
             <div class="activities">
-                宜：{% for item in good_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %} | 忌：{% for item in
+                <img src="{{ url_for('static', filename='yi-icon.png') }}" alt="宜" class="yi-ji-icon"> {% for item in
+                good_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %} | <img
+                    src="{{ url_for('static', filename='ji-icon.png') }}" alt="忌" class="yi-ji-icon"> {% for item in
                 bad_for %}{{ item }}{% if not loop.last %}，{% endif %}{% endfor %}
             </div>
 

@@ -81,8 +81,8 @@ def index():
         'daily_quote': daily_quote,
         'lunar_date': lunar_date,
         'lunar_date_short': lunar_date_short,
-        'good_for': lunar.getDayYi()[:4],  # Limit to 4 items
-        'bad_for': lunar.getDayJi()[:4],   # Limit to 4 items
+        'good_for': lunar.getDayYi()[:3],  # Limit to 3 items
+        'bad_for': lunar.getDayJi()[:3],   # Limit to 3 items
         'day_progress': round(day_progress, 2),  # Percentage of day elapsed
         'countdown_days': days_remaining,
         'countdown_hours': hours_remaining,
