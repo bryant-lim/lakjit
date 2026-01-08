@@ -70,7 +70,7 @@
 
             <!-- Activities Section (Yi & Ji inline) -->
             <div class="activities" id="activities">
-                <img src="static/yi-icon.png" alt="宜" class="yi-ji-icon"> 嫁娶，祭祀，祈福 | <img src="static/ji-icon.png"
+                <img src="static/ji-icon.png" alt="宜" class="yi-ji-icon"> 嫁娶，祭祀，祈福 | <img src="static/yi-icon.png"
                     alt="忌" class="yi-ji-icon"> 掘井，安葬，栽种
             </div>
 
@@ -158,8 +158,8 @@
             const yiItems = lunar.getDayYi().slice(0, 3);
             const jiItems = lunar.getDayJi().slice(0, 3);
             document.getElementById('activities').innerHTML =
-                '<img src="static/yi-icon.png" alt="宜" class="yi-ji-icon"> ' + yiItems.join('，') +
-                ' | <img src="static/ji-icon.png" alt="忌" class="yi-ji-icon"> ' + jiItems.join('，');
+                '<img src="static/ji-icon.png" alt="宜" class="yi-ji-icon"> ' + yiItems.join('，') +
+                ' | <img src="static/yi-icon.png" alt="忌" class="yi-ji-icon"> ' + jiItems.join('，');
 
             // Update daily quote (random selection)
             const quotes = ['五福临门', '大吉大利', '步步高升', '金玉满堂', '恭喜发财'];

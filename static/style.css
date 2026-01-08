@@ -310,6 +310,7 @@ body.night-mode .divider {
 .divider {
     transition: color 1s ease, background-color 1s ease, opacity 1s ease, box-shadow 1s ease;
 }
+
 /* ============================================
    LUNAR NOTIFICATION BANNER
    ============================================ */
@@ -317,7 +318,8 @@ body.night-mode .divider {
 /* Notification Banner - Floating below progress bar */
 .lunar-notification {
     position: fixed;
-    top: 18px; /* 8px progress bar + 10px spacing */
+    top: 18px;
+    /* 8px progress bar + 10px spacing */
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(255, 255, 255, 0.95);
@@ -332,7 +334,7 @@ body.night-mode .divider {
     font-size: 0.9rem;
     max-width: 90%;
     white-space: nowrap;
-    
+
     /* Fade-in animation */
     animation: fadeIn 0.5s ease;
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -343,6 +345,7 @@ body.night-mode .divider {
         opacity: 0;
         transform: translateX(-50%) translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
@@ -413,11 +416,11 @@ body.night-mode .notification-close:hover {
         padding: 6px 12px;
         gap: 8px;
     }
-    
+
     .incense-icon {
         height: 16px;
     }
-    
+
     .notification-close {
         font-size: 1.3rem;
         width: 18px;
@@ -438,7 +441,8 @@ body.night-mode .notification-close:hover {
     height: 100vh;
     overflow: hidden;
     pointer-events: none;
-    z-index: 1; /* Behind content (z-index 10) but above background */
+    z-index: 1;
+    /* Behind content (z-index 10) but above background */
 }
 
 /* Petal Base Style - Minimalist shape */
@@ -446,7 +450,8 @@ body.night-mode .notification-close:hover {
     position: absolute;
     width: 10px;
     height: 10px;
-    background-color: #FFD1DC; /* Soft pink for day mode */
+    background-color: #FFD1DC;
+    /* Soft pink for day mode */
     border-radius: 50% 0 50% 0;
     opacity: 0.7;
     animation-timing-function: linear;
@@ -455,7 +460,8 @@ body.night-mode .notification-close:hover {
 
 /* Night Mode Petal Color */
 body.night-mode .petal {
-    background-color: rgba(224, 17, 95, 0.6); /* Rose with transparency */
+    background-color: rgba(224, 17, 95, 0.6);
+    /* Rose with transparency */
 }
 
 /* Falling Animation with Sway and Rotation */
@@ -463,39 +469,132 @@ body.night-mode .petal {
     0% {
         transform: translateY(-10vh) translateX(0) rotate(0deg);
     }
+
     25% {
         transform: translateY(25vh) translateX(20px) rotate(90deg);
     }
+
     50% {
         transform: translateY(50vh) translateX(-10px) rotate(180deg);
     }
+
     75% {
         transform: translateY(75vh) translateX(15px) rotate(270deg);
     }
+
     100% {
         transform: translateY(110vh) translateX(0) rotate(360deg);
     }
 }
 
 /* Individual Petal Animations - Varied timing and positions */
-.petal-1 { left: 5%; animation: fall 12s linear infinite; animation-delay: 0s; }
-.petal-2 { left: 15%; animation: fall 14s linear infinite; animation-delay: 2s; }
-.petal-3 { left: 25%; animation: fall 11s linear infinite; animation-delay: 4s; }
-.petal-4 { left: 35%; animation: fall 13s linear infinite; animation-delay: 1s; }
-.petal-5 { left: 45%; animation: fall 15s linear infinite; animation-delay: 3s; }
-.petal-6 { left: 55%; animation: fall 12s linear infinite; animation-delay: 5s; }
-.petal-7 { left: 65%; animation: fall 14s linear infinite; animation-delay: 2.5s; }
-.petal-8 { left: 75%; animation: fall 11s linear infinite; animation-delay: 4.5s; }
-.petal-9 { left: 85%; animation: fall 13s linear infinite; animation-delay: 1.5s; }
-.petal-10 { left: 10%; animation: fall 15s linear infinite; animation-delay: 3.5s; }
-.petal-11 { left: 20%; animation: fall 12s linear infinite; animation-delay: 0.5s; }
-.petal-12 { left: 30%; animation: fall 14s linear infinite; animation-delay: 2.8s; }
-.petal-13 { left: 40%; animation: fall 11s linear infinite; animation-delay: 4.2s; }
-.petal-14 { left: 50%; animation: fall 13s linear infinite; animation-delay: 1.8s; }
-.petal-15 { left: 60%; animation: fall 15s linear infinite; animation-delay: 3.2s; }
-.petal-16 { left: 70%; animation: fall 12s linear infinite; animation-delay: 5.5s; }
-.petal-17 { left: 80%; animation: fall 14s linear infinite; animation-delay: 2.2s; }
-.petal-18 { left: 90%; animation: fall 11s linear infinite; animation-delay: 4.8s; }
+.petal-1 {
+    left: 5%;
+    animation: fall 12s linear infinite;
+    animation-delay: 0s;
+}
+
+.petal-2 {
+    left: 15%;
+    animation: fall 14s linear infinite;
+    animation-delay: 2s;
+}
+
+.petal-3 {
+    left: 25%;
+    animation: fall 11s linear infinite;
+    animation-delay: 4s;
+}
+
+.petal-4 {
+    left: 35%;
+    animation: fall 13s linear infinite;
+    animation-delay: 1s;
+}
+
+.petal-5 {
+    left: 45%;
+    animation: fall 15s linear infinite;
+    animation-delay: 3s;
+}
+
+.petal-6 {
+    left: 55%;
+    animation: fall 12s linear infinite;
+    animation-delay: 5s;
+}
+
+.petal-7 {
+    left: 65%;
+    animation: fall 14s linear infinite;
+    animation-delay: 2.5s;
+}
+
+.petal-8 {
+    left: 75%;
+    animation: fall 11s linear infinite;
+    animation-delay: 4.5s;
+}
+
+.petal-9 {
+    left: 85%;
+    animation: fall 13s linear infinite;
+    animation-delay: 1.5s;
+}
+
+.petal-10 {
+    left: 10%;
+    animation: fall 15s linear infinite;
+    animation-delay: 3.5s;
+}
+
+.petal-11 {
+    left: 20%;
+    animation: fall 12s linear infinite;
+    animation-delay: 0.5s;
+}
+
+.petal-12 {
+    left: 30%;
+    animation: fall 14s linear infinite;
+    animation-delay: 2.8s;
+}
+
+.petal-13 {
+    left: 40%;
+    animation: fall 11s linear infinite;
+    animation-delay: 4.2s;
+}
+
+.petal-14 {
+    left: 50%;
+    animation: fall 13s linear infinite;
+    animation-delay: 1.8s;
+}
+
+.petal-15 {
+    left: 60%;
+    animation: fall 15s linear infinite;
+    animation-delay: 3.2s;
+}
+
+.petal-16 {
+    left: 70%;
+    animation: fall 12s linear infinite;
+    animation-delay: 5.5s;
+}
+
+.petal-17 {
+    left: 80%;
+    animation: fall 14s linear infinite;
+    animation-delay: 2.2s;
+}
+
+.petal-18 {
+    left: 90%;
+    animation: fall 11s linear infinite;
+    animation-delay: 4.8s;
+}
 
 /* Performance Optimization */
 .petal {
@@ -558,7 +657,7 @@ body.night-mode .share-button svg {
         bottom: 15px;
         right: 15px;
     }
-    
+
     .share-button svg {
         width: 20px;
         height: 20px;
@@ -638,17 +737,17 @@ body.night-mode .share-button svg {
 
 /* Yi and Ji Icon Images */
 .yi-ji-icon {
-    height: 20px;
-    width: 20px;
+    height: 28px;
+    width: 28px;
     vertical-align: middle;
-    margin: 0 4px;
+    margin: 0 6px;
     display: inline-block;
 }
 
-/* Responsive sizing for mobile */
+/* Responsive sizing for mobile - keep same size */
 @media (max-width: 768px) {
     .yi-ji-icon {
-        height: 18px;
-        width: 18px;
+        height: 28px;
+        width: 28px;
     }
 }
