@@ -104,25 +104,32 @@
 
         function updateCountdown() {
             const now = new Date().getTime();
-            const timeRemaining = cnyTimestamp - now;
+            const distance = cnyTimestamp - now;
 
-            if (timeRemaining > 0) {
-                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-                document.getElementById('countdown-days').textContent = days;
-                document.getElementById('countdown-hours').textContent = hours;
-                document.getElementById('countdown-minutes').textContent = minutes;
-                document.getElementById('countdown-seconds').textContent = seconds;
-            } else {
-                document.getElementById('countdown-text').textContent = '農曆新年快樂！';
+            if (distance < 0) {
+                // After CNY: Show greeting message
+                document.getElementById('countdown-text').textContent = 'Lak-Jit恭祝大家 恭喜發財！萬事如意！馬年行大運';
+                document.getElementById('countdown-days').textContent = '';
+                document.getElementById('countdown-hours').textContent = '';
+                document.getElementById('countdown-minutes').textContent = '';
+                document.getElementById('countdown-seconds').textContent = '';
+                clearInterval(countdownInterval);
+                return;
             }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown-days').textContent = days;
+            document.getElementById('countdown-hours').textContent = hours;
+            document.getElementById('countdown-minutes').textContent = minutes;
+            document.getElementById('countdown-seconds').textContent = seconds;
         }
 
         // Update every second
-        setInterval(updateCountdown, 1000);
+        const countdownInterval = setInterval(updateCountdown, 1000);
 
         // Client-side night mode detection
         function checkNightMode() {
