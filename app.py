@@ -34,34 +34,34 @@ def index():
     if today.year == 2026 and today.month == 2:
         # February 2026: Year of the Horse quotes (28 quotes for 28 days)
         february_quotes = [
-            '龍馬精神',  # Feb 1
-            '馬到成功',  # Feb 2
-            '一馬當先',  # Feb 3
-            '萬馬奔騰',  # Feb 4
-            '駿馬騰飛',  # Feb 5
-            '躍馬揚鞭',  # Feb 6
-            '天馬行空',  # Feb 7
-            '龍騰馬躍',  # Feb 8
-            '馬年大吉',  # Feb 9
-            '馬年發財',  # Feb 10
-            '金馬迎春',  # Feb 11
-            '福馬迎新',  # Feb 12
-            '策馬前進',  # Feb 13
-            '奔馬報喜',  # Feb 14
-            '神馬獻瑞',  # Feb 15
-            '汗馬功勞',  # Feb 16
-            '馬鳴得意',  # Feb 17 (CNY)
-            '馬到功成',  # Feb 18
-            '馬騰盛世',  # Feb 19
-            '千里良馬',  # Feb 20
-            '龍精虎馬',  # Feb 21
-            '馬到福至',  # Feb 22
-            '迎春接馬',  # Feb 23
-            '瑞馬呈祥',  # Feb 24
-            '馬步青雲',  # Feb 25
-            '捷報馬傳',  # Feb 26
-            '順利馬年',  # Feb 27
-            '順利馬年'   # Feb 28
+            '龍馬精神',    # Feb 1
+            '馬到成功',    # Feb 2
+            '一馬當先',    # Feb 3
+            '萬馬奔騰',    # Feb 4
+            '馬年大吉',    # Feb 5
+            '馬年發財',    # Feb 6
+            '金馬迎春',    # Feb 7
+            '駿馬騰飛',    # Feb 8
+            '躍馬揚鞭',    # Feb 9
+            '驍馬迎祥',    # Feb 10
+            '天馬行空',    # Feb 11
+            '龍騰馬躍',    # Feb 12
+            '福馬迎新',    # Feb 13
+            '策馬前進',    # Feb 14
+            '奔馬報喜',    # Feb 15
+            '神馬獻瑞',    # Feb 16
+            '馬年新禧',    # Feb 17 (CNY)
+            '馬歲報佳音',  # Feb 18
+            '馬到新春',    # Feb 19
+            '馬騰盛世',    # Feb 20
+            '千里良馬',    # Feb 21
+            '龍精虎馬',    # Feb 22
+            '馬到福至',    # Feb 23
+            '迎春接馬',    # Feb 24
+            '瑞馬呈祥',    # Feb 25
+            '馬步青雲',    # Feb 26
+            '捷報馬傳',    # Feb 27
+            '順利馬年'     # Feb 28
         ]
         # Use day of month (1-28) as direct index (subtract 1 for 0-based array)
         day_index = today.day - 1
