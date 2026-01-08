@@ -95,10 +95,15 @@
             const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             document.getElementById('weekday').textContent = weekdays[solar.getWeek()];
 
-            // Update lunar date
-            const lunarMonth = lunar.getMonthInChinese();
+            // Update lunar date - use numeric month format (十一月 instead of 冬月)
+            const monthChineseMap = {
+                1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六',
+                7: '七', 8: '八', 9: '九', 10: '十', 11: '十一', 12: '十二'
+            };
+            const lunarMonthNum = lunar.getMonth();
+            const lunarMonthChinese = monthChineseMap[lunarMonthNum] || lunarMonthNum;
             const lunarDay = lunar.getDayInChinese();
-            document.getElementById('lunar-date').textContent = lunarMonth + '月' + lunarDay;
+            document.getElementById('lunar-date').textContent = lunarMonthChinese + '月' + lunarDay;
 
             // Update activities (Yi & Ji)
             const yiItems = lunar.getDayYi().slice(0, 4);
