@@ -13,6 +13,9 @@
 
     <!-- Lunar JavaScript Library -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
+
+    <!-- html2canvas for Share as Image -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -89,6 +92,16 @@
         <span class="notification-text" id="notification-text"></span>
         <button class="notification-close" id="notification-close" aria-label="Close notification">×</button>
     </div>
+
+    <!-- Share as Image Button -->
+    <button class="share-button" id="share-button" aria-label="Share as image" title="Share as image">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16 6 12 2 8 6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+    </button>
 
     <script>
         // Initialize on page load
@@ -299,6 +312,108 @@
                 notification.style.opacity = '1'; // Reset for next time
             }, 300);
         }
+
+        // Share as Image Functionality
+        document.getElementById('share-button').addEventListener('click', async function () {
+            // Create hidden container with 4:5 aspect ratio (1080x1350)
+            const shareContainer = document.createElement('div');
+            shareContainer.className = 'share-container';
+
+            // Determine current theme
+            const isNightMode = document.body.classList.contains('night-mode');
+
+            // Apply background based on theme
+            if (isNightMode) {
+                shareContainer.style.backgroundImage = "url('static/background-night.jpg')";
+                shareContainer.style.color = '#E0E0E0';
+                shareContainer.style.filter = 'brightness(0.6)';
+            } else {
+                shareContainer.style.backgroundImage = "url('static/background.jpg')";
+                shareContainer.style.color = '#000000';
+            }
+
+            // Create content wrapper
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'share-content';
+
+            // Clone essential content
+            // 1. Date Header (Year & Month)
+            const dateHeader = document.querySelector('.date-header');
+            if (dateHeader) {
+                const clonedDateHeader = dateHeader.cloneNode(true);
+                contentWrapper.appendChild(clonedDateHeader);
+            }
+
+            // 2. Big Date
+            const bigDate = document.querySelector('.big-date');
+            if (bigDate) {
+                const clonedBigDate = bigDate.cloneNode(true);
+                contentWrapper.appendChild(clonedBigDate);
+            }
+
+            // 3. Weekday with Lunar Date
+            const weekday = document.querySelector('.weekday');
+            if (weekday) {
+                const clonedWeekday = weekday.cloneNode(true);
+                contentWrapper.appendChild(clonedWeekday);
+            }
+
+            // 4. Divider
+            const divider = document.createElement('div');
+            divider.className = 'divider';
+            contentWrapper.appendChild(divider);
+
+            // 5. Activities (Yi & Ji)
+            const activities = document.querySelector('.activities');
+            if (activities) {
+                const clonedActivities = activities.cloneNode(true);
+                contentWrapper.appendChild(clonedActivities);
+            }
+
+            // 6. Daily Quote
+            const dailyQuote = document.querySelector('.daily-quote');
+            if (dailyQuote) {
+                const clonedDailyQuote = dailyQuote.cloneNode(true);
+                contentWrapper.appendChild(clonedDailyQuote);
+            }
+
+            // Append content to container
+            shareContainer.appendChild(contentWrapper);
+
+            // Append to body (hidden off-screen)
+            document.body.appendChild(shareContainer);
+
+            try {
+                // Capture with html2canvas
+                const canvas = await html2canvas(shareContainer, {
+                    width: 1080,
+                    height: 1350,
+                    scale: 2, // Higher quality
+                    backgroundColor: null,
+                    logging: false,
+                    useCORS: true
+                });
+
+                // Convert to PNG and download
+                canvas.toBlob(function (blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const today = new Date();
+                    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                    link.download = `Lakjit-Calendar-${dateStr}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Failed to generate image. Please try again.');
+            } finally {
+                // Clean up: remove hidden container
+                document.body.removeChild(shareContainer);
+            }
+        });
     </script>
 </body>
 

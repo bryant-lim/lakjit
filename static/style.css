@@ -502,3 +502,132 @@ body.night-mode .petal {
     will-change: transform;
     backface-visibility: hidden;
 }
+
+/* ============================================
+   SHARE AS IMAGE BUTTON
+   ============================================ */
+
+/* Share Button - Bottom Right Corner */
+.share-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.share-button svg {
+    color: #000000;
+    transition: color 0.3s ease;
+}
+
+.share-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.share-button:active {
+    transform: scale(0.95);
+}
+
+/* Night Mode Share Button */
+body.night-mode .share-button {
+    background-color: rgba(40, 40, 40, 0.9);
+    border-color: rgba(224, 224, 224, 0.2);
+}
+
+body.night-mode .share-button svg {
+    color: #E0E0E0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .share-button {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .share-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Hidden Share Container (for image generation) */
+.share-container {
+    position: fixed;
+    top: -10000px;
+    left: -10000px;
+    width: 1080px;
+    height: 1350px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    box-sizing: border-box;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+/* Share Container Content Styling */
+.share-container .share-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    text-align: center;
+}
+
+.share-container .date-header {
+    font-size: 2.5rem;
+    font-weight: 400;
+}
+
+.share-container .big-date {
+    font-size: 18rem;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.share-container .weekday {
+    font-size: 2.5rem;
+    font-weight: 400;
+}
+
+.share-container .divider {
+    width: 80%;
+    max-width: 600px;
+    height: 3px;
+    background-color: currentColor;
+    margin: 20px 0;
+}
+
+.share-container .activities {
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.share-container .daily-quote {
+    font-size: 5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
