@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- html2canvas for Share as Image -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
 <body{% if is_night_mode %} class="night-mode" {% endif %}>
@@ -83,6 +86,16 @@
         </div>
     </div>
 
+    <!-- Share as Image Button -->
+    <button class="share-button" id="share-button" aria-label="Share as image" title="Share as image">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16 6 12 2 8 6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+    </button>
+
     <script>
         // Real-time countdown update
         const cnyTimestamp = {{ cny_timestamp }};
@@ -125,6 +138,76 @@
         // Check night mode on load and every minute
         checkNightMode();
         setInterval(checkNightMode, 60000); // Check every minute
+
+        // Share as Image Functionality
+        document.getElementById('share-button').addEventListener('click', async function () {
+            const shareContainer = document.createElement('div');
+            shareContainer.className = 'share-container';
+
+            const isNightMode = document.body.classList.contains('night-mode');
+
+            if (isNightMode) {
+                shareContainer.style.backgroundImage = "url('{{ url_for('static', filename='background-night.jpg') }}')";
+                shareContainer.style.color = '#E0E0E0';
+                shareContainer.style.filter = 'brightness(0.6)';
+            } else {
+                shareContainer.style.backgroundImage = "url('{{ url_for('static', filename='background.jpg') }}')";
+                shareContainer.style.color = '#000000';
+            }
+
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'share-content';
+
+            const dateHeader = document.querySelector('.date-header');
+            if (dateHeader) contentWrapper.appendChild(dateHeader.cloneNode(true));
+
+            const bigDate = document.querySelector('.big-date');
+            if (bigDate) contentWrapper.appendChild(bigDate.cloneNode(true));
+
+            const weekday = document.querySelector('.weekday');
+            if (weekday) contentWrapper.appendChild(weekday.cloneNode(true));
+
+            const divider = document.createElement('div');
+            divider.className = 'divider';
+            contentWrapper.appendChild(divider);
+
+            const activities = document.querySelector('.activities');
+            if (activities) contentWrapper.appendChild(activities.cloneNode(true));
+
+            const dailyQuote = document.querySelector('.daily-quote');
+            if (dailyQuote) contentWrapper.appendChild(dailyQuote.cloneNode(true));
+
+            shareContainer.appendChild(contentWrapper);
+            document.body.appendChild(shareContainer);
+
+            try {
+                const canvas = await html2canvas(shareContainer, {
+                    width: 1080,
+                    height: 1350,
+                    scale: 2,
+                    backgroundColor: null,
+                    logging: false,
+                    useCORS: true
+                });
+
+                canvas.toBlob(function (blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const today = new Date();
+                    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                    link.download = `Lakjit-Calendar-${dateStr}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Failed to generate image. Please try again.');
+            } finally {
+                document.body.removeChild(shareContainer);
+            }
+        });
     </script>
     </body>
 
