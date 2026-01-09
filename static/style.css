@@ -849,6 +849,7 @@ body.night-mode .install-button {
         font-size: 12px;
     }
 }
+
 /* ============================================
    LUCKY NUMBER FEATURE
    ============================================ */
@@ -864,11 +865,12 @@ body.night-mode .install-button {
 /* Lucky Icon (Sparkle) */
 .lucky-icon {
     display: inline-block;
-    margin-left: 8px;
-    font-size: 0.8em;
-    opacity: 0.7;
+    margin-left: 4px;
+    font-size: 1.2em;
+    opacity: 0.8;
     transition: all 0.3s ease;
     animation: sparkle 2s infinite;
+    vertical-align: middle;
 }
 
 .daily-quote-container:hover .lucky-icon {
@@ -877,8 +879,15 @@ body.night-mode .install-button {
 }
 
 @keyframes sparkle {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 /* Lucky Tooltip */
@@ -916,7 +925,7 @@ body.night-mode .install-button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.8);
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    background: #F5F5DC;
     padding: 30px 40px;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -937,7 +946,7 @@ body.night-mode .install-button {
 .lucky-number-modal h3 {
     margin: 0 0 20px 0;
     font-size: 20px;
-    color: #8B4513;
+    color: #000000;
     font-weight: 700;
 }
 
@@ -961,9 +970,17 @@ body.night-mode .install-button {
 }
 
 @keyframes numberPop {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .lucky-close-btn {
@@ -985,7 +1002,11 @@ body.night-mode .install-button {
 
 /* Night Mode Lucky Number */
 body.night-mode .lucky-number-modal {
-    background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+    background: #2C2C2C;
+}
+
+body.night-mode .lucky-number-modal h3 {
+    color: #E0E0E0;
 }
 
 /* Mobile Responsive */
@@ -993,16 +1014,16 @@ body.night-mode .lucky-number-modal {
     .lucky-number-modal {
         padding: 25px 30px;
     }
-    
+
     .lucky-number-modal h3 {
         font-size: 18px;
     }
-    
+
     .lucky-numbers {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .lucky-number {
         font-size: 28px;
         padding: 12px 20px;
