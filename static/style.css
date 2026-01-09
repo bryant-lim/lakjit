@@ -857,7 +857,8 @@ body.night-mode .install-button {
 /* Daily Quote Container with Lucky Icon */
 .daily-quote-container {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     cursor: pointer;
     user-select: none;
 }
@@ -984,7 +985,7 @@ body.night-mode .install-button {
 }
 
 .lucky-close-btn {
-    background-color: rgba(139, 69, 19, 0.8);
+    background-color: #000000;
     color: #FFFFFF;
     border: none;
     padding: 10px 20px;
@@ -996,7 +997,7 @@ body.night-mode .install-button {
 }
 
 .lucky-close-btn:hover {
-    background-color: rgba(139, 69, 19, 1);
+    background-color: #333333;
     transform: scale(1.05);
 }
 
