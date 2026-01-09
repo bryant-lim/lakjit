@@ -1124,3 +1124,23 @@ body.night-mode .lucky-number-modal h3 {
     90% { transform: translateY(-2px); }
     100% { transform: translateY(0); }
 }
+
+/* Mobile - Red Seal on New Line */
+@media (max-width: 768px) {
+    .daily-quote-container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .lucky-seal {
+        margin-left: 0;
+        margin-top: 8px;
+        flex-basis: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .lucky-hint {
+        margin-top: 8px;
+    }
+}
