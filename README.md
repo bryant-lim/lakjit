@@ -27,12 +27,13 @@ A beautiful, modern web application that displays traditional Chinese calendar i
 - **Refresh-Proof**: Quote remains consistent across page refreshes
 
 ### Lucky Number Feature
-- **Subtle Shimmer Effect**: Gold gradient sweep across daily quote (5s cycle)
+- **Subtle Shimmer Effect**: Gold gradient sweep across daily quote (5s cycle, rounded corners)
 - **Interactive Hint**: "點擊驚喜" caption below quote (fades after first click)
 - **Slot Machine Animation**: Numbers scroll for 1 second before revealing
 - **Random Generation**: Two 4-digit numbers (0000-9999) with proper padding
 - **Auto-Close**: Modal disappears after 10 seconds
 - **Touch & Click**: Works on both desktop and mobile devices
+- **Refined Spacing**: Tight, clean layout with optimized padding
 
 ### Lunar Notification Banner
 - **Smart Date Detection**: Triggers for 初一 and 初十五
