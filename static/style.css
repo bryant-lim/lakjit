@@ -109,7 +109,6 @@ body {
 .daily-quote {
     font-size: 3.2rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
     letter-spacing: 0.2em;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
