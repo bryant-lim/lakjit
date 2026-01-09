@@ -767,8 +767,8 @@ body.night-mode .share-button svg {
     border-radius: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    display: flex;
-    /* Changed from none to flex - always visible */
+    display: none;
+    /* Hidden on desktop */
     align-items: center;
     gap: 8px;
     z-index: 1000;
@@ -834,6 +834,8 @@ body.night-mode .install-button {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .install-button {
+        display: flex;
+        /* Show on mobile devices */
         bottom: 15px;
         left: 15px;
         padding: 8px 14px;
