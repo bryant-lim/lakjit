@@ -1,0 +1,27 @@
+{
+  "name": "Lakjit | 曆日",
+  "short_name": "Lakjit",
+  "description": "Modern Traditional Chinese Calendar - Your daily digital companion for lunar dates and auspicious activities",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5DC",
+  "theme_color": "#F5F5DC",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "static/icon-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "static/icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "lang": "zh-Hant",
+  "dir": "ltr"
+}

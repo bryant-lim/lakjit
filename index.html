@@ -20,6 +20,17 @@
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="static/lak-jit.jpg">
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F5F5DC">
+    <meta name="theme-color" content="#2C2C2C" media="(prefers-color-scheme: dark)">
+
+    <!-- Apple iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Lakjit">
+    <link rel="apple-touch-icon" href="static/icon-192.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap"
@@ -107,6 +118,17 @@
         <img src="static/dark-incense.png" alt="incense" class="incense-icon" id="incense-icon">
         <span class="notification-text" id="notification-text"></span>
         <button class="notification-close" id="notification-close" aria-label="Close notification">×</button>
+    </div>
+
+    <!-- PWA Install Button -->
+    <button id="install-button" class="install-button">
+        <span>📱</span>
+        <span>安裝應用</span>
+    </button>
+
+    <!-- iOS Install Tooltip -->
+    <div id="ios-tooltip" class="ios-install-tooltip">
+        點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
     </div>
 
     <!-- Share as Image Button -->
@@ -518,6 +540,83 @@
                 document.body.removeChild(shareContainer);
             }
         });
+
+        // ============================================
+        // PWA INSTALLATION
+        // ============================================
+
+        let deferredPrompt;
+        const installButton = document.getElementById('install-button');
+        const iosTooltip = document.getElementById('ios-tooltip');
+
+        // Check if already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            // Already installed, don't show button
+            installButton.style.display = 'none';
+        }
+
+        // Listen for beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing
+            e.preventDefault();
+            // Save the event for later
+            deferredPrompt = e;
+            // Show install button
+            installButton.classList.add('show');
+        });
+
+        // Handle install button click
+        installButton.addEventListener('click', async () => {
+            // Check if iOS Safari
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            if (isIOS && isSafari) {
+                // Show iOS instructions
+                iosTooltip.classList.add('show');
+                setTimeout(() => {
+                    iosTooltip.classList.remove('show');
+                }, 5000);
+                return;
+            }
+
+            if (!deferredPrompt) {
+                return;
+            }
+
+            // Show the install prompt
+            deferredPrompt.prompt();
+
+            // Wait for the user's response
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response: ${outcome}`);
+
+            // Clear the deferredPrompt
+            deferredPrompt = null;
+
+            // Hide the install button
+            installButton.classList.remove('show');
+        });
+
+        // Listen for app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA installed successfully');
+            installButton.classList.remove('show');
+            deferredPrompt = null;
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 
