@@ -849,3 +849,162 @@ body.night-mode .install-button {
         font-size: 12px;
     }
 }
+/* ============================================
+   LUCKY NUMBER FEATURE
+   ============================================ */
+
+/* Daily Quote Container with Lucky Icon */
+.daily-quote-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Lucky Icon (Sparkle) */
+.lucky-icon {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 0.8em;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    animation: sparkle 2s infinite;
+}
+
+.daily-quote-container:hover .lucky-icon {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Lucky Tooltip */
+.lucky-tooltip {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.daily-quote-container:hover .lucky-tooltip {
+    opacity: 1;
+}
+
+/* Mobile - Show tooltip on page load */
+@media (max-width: 768px) {
+    .lucky-tooltip {
+        opacity: 0.8;
+    }
+}
+
+/* Lucky Number Modal */
+.lucky-number-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 90%;
+    text-align: center;
+}
+
+.lucky-number-modal.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+.lucky-number-modal h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #8B4513;
+    font-weight: 700;
+}
+
+.lucky-numbers {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.lucky-number {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 32px;
+    font-weight: 900;
+    color: #8B4513;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: numberPop 0.5s ease;
+}
+
+@keyframes numberPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.lucky-close-btn {
+    background-color: rgba(139, 69, 19, 0.8);
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.lucky-close-btn:hover {
+    background-color: rgba(139, 69, 19, 1);
+    transform: scale(1.05);
+}
+
+/* Night Mode Lucky Number */
+body.night-mode .lucky-number-modal {
+    background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .lucky-number-modal {
+        padding: 25px 30px;
+    }
+    
+    .lucky-number-modal h3 {
+        font-size: 18px;
+    }
+    
+    .lucky-numbers {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .lucky-number {
+        font-size: 28px;
+        padding: 12px 20px;
+    }
+}

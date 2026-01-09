@@ -100,8 +100,12 @@
                     alt="忌" class="yi-ji-icon"> 掘井，安葬，栽种
             </div>
 
-            <!-- Daily Quote -->
-            <div class="daily-quote" id="daily-quote">五福临门</div>
+            <!-- Daily Quote with Lucky Number Feature -->
+            <div class="daily-quote-container" id="daily-quote-container">
+                <div class="daily-quote" id="daily-quote">五福临门</div>
+                <span class="lucky-icon">✨</span>
+                <div class="lucky-tooltip">點我抽幸運號碼</div>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -129,6 +133,16 @@
     <!-- iOS Install Tooltip -->
     <div id="ios-tooltip" class="ios-install-tooltip">
         點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
+    </div>
+
+    <!-- Lucky Number Modal -->
+    <div id="lucky-modal" class="lucky-number-modal">
+        <h3>🎉 今日幸運號碼 🎉</h3>
+        <div class="lucky-numbers">
+            <div class="lucky-number" id="lucky-num-1">0000</div>
+            <div class="lucky-number" id="lucky-num-2">0000</div>
+        </div>
+        <button class="lucky-close-btn" id="lucky-close">關閉</button>
     </div>
 
     <!-- Share as Image Button -->
@@ -617,6 +631,41 @@
                     });
             });
         }
+
+        // Lucky Number Feature
+        const quoteContainer = document.getElementById('daily-quote-container');
+        const luckyModal = document.getElementById('lucky-modal');
+        const luckyNum1 = document.getElementById('lucky-num-1');
+        const luckyNum2 = document.getElementById('lucky-num-2');
+        const luckyCloseBtn = document.getElementById('lucky-close');
+        let autoCloseTimer;
+
+        function generateLuckyNumber() {
+            return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        }
+
+        function showLuckyNumbers() {
+            luckyNum1.textContent = generateLuckyNumber();
+            luckyNum2.textContent = generateLuckyNumber();
+            luckyModal.classList.add('show');
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(() => luckyModal.classList.remove('show'), 10000);
+        }
+
+        function closeLuckyNumbers() {
+            luckyModal.classList.remove('show');
+            clearTimeout(autoCloseTimer);
+        }
+
+        quoteContainer.addEventListener('click', showLuckyNumbers);
+        quoteContainer.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            showLuckyNumbers();
+        });
+        luckyCloseBtn.addEventListener('click', closeLuckyNumbers);
+        luckyModal.addEventListener('click', (e) => {
+            if (e.target === luckyModal) closeLuckyNumbers();
+        });
     </script>
 </body>
 
