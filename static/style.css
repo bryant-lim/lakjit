@@ -751,6 +751,7 @@ body.night-mode .share-button svg {
         width: 28px;
     }
 }
+
 /* ============================================
    PWA INSTALL BUTTON
    ============================================ */
@@ -766,7 +767,8 @@ body.night-mode .share-button svg {
     border-radius: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    display: none;
+    display: flex;
+    /* Changed from none to flex - always visible */
     align-items: center;
     gap: 8px;
     z-index: 1000;
@@ -837,7 +839,7 @@ body.night-mode .install-button {
         padding: 8px 14px;
         font-size: 13px;
     }
-    
+
     .ios-install-tooltip {
         bottom: 60px;
         left: 15px;
