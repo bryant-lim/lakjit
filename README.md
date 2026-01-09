@@ -26,6 +26,14 @@ A beautiful, modern web application that displays traditional Chinese calendar i
   - Feb 28: 順利馬年
 - **Refresh-Proof**: Quote remains consistent across page refreshes
 
+### Lucky Number Feature
+- **Subtle Shimmer Effect**: Gold gradient sweep across daily quote (5s cycle)
+- **Interactive Hint**: "點擊驚喜" caption below quote (fades after first click)
+- **Slot Machine Animation**: Numbers scroll for 1 second before revealing
+- **Random Generation**: Two 4-digit numbers (0000-9999) with proper padding
+- **Auto-Close**: Modal disappears after 10 seconds
+- **Touch & Click**: Works on both desktop and mobile devices
+
 ### Lunar Notification Banner
 - **Smart Date Detection**: Triggers for 初一 and 初十五
   - T-minus 2 days: "提醒：2天後是初一/初十五"
@@ -57,6 +65,16 @@ A beautiful, modern web application that displays traditional Chinese calendar i
 - **Excludes UI**: No footer, progress bar, or share button in image
 - **Theme Aware**: Captures current day/night mode styling
 - **One-Click Download**: Auto-saves as `Lakjit-Calendar-[Date].png`
+
+### Progressive Web App (PWA)
+- **Installable**: Add to home screen on mobile and desktop
+- **Offline Support**: Works without internet connection
+- **Cache-First Strategy**: Instant loading after first visit
+- **Service Worker**: Caches all static assets and resources
+- **Manifest**: Standalone app experience with custom icons
+- **Mobile Install Button**: Shows only on mobile devices (≤768px)
+- **iOS Support**: Manual "Add to Home Screen" instructions
+- **Auto-Update**: Updates automatically when online
 
 ### Progress & Indicators
 - **Day Progress Bar**: Visual indicator of day completion (0-100%)
