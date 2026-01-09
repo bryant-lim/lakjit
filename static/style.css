@@ -1040,12 +1040,14 @@ body.night-mode .lucky-number-modal h3 {
     position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     user-select: none;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.15) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 5s ease-in-out infinite;
-    padding: 2px 4px;
+    padding: 8px 12px;
+    border-radius: 12px;
 }
 
 @keyframes shimmer {
@@ -1088,8 +1090,9 @@ body.night-mode .lucky-number-modal h3 {
     color: #999999;
     text-align: center;
     margin-top: 5px;
-    opacity: 0.7;
+    opacity: 1;
     transition: opacity 0.5s ease;
+    display: block;
 }
 
 .lucky-hint.hidden {
