@@ -1030,3 +1030,97 @@ body.night-mode .lucky-number-modal h3 {
         padding: 12px 20px;
     }
 }
+/* ============================================
+   ENHANCED LUCKY NUMBER FEATURE
+   ============================================ */
+
+/* Daily Quote Container with Shimmer Effect */
+.daily-quote-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.15) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 5s ease-in-out infinite;
+    padding: 2px 4px;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: -200% 0; }
+    50% { background-position: 200% 0; }
+}
+
+/* Red Seal Icon (福) */
+.lucky-seal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    background-color: #DC143C;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.daily-quote-container:hover .lucky-seal {
+    transform: scale(1.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Click Hint Caption */
+.lucky-hint {
+    font-size: 10px;
+    color: #999999;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 0.7;
+    transition: opacity 0.5s ease;
+}
+
+.lucky-hint.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Slot Machine Animation for Numbers */
+.lucky-number {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 32px;
+    font-weight: 900;
+    color: #8B4513;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lucky-number.animating {
+    animation: slotMachine 1s ease-out;
+}
+
+@keyframes slotMachine {
+    0% { transform: translateY(0); }
+    10% { transform: translateY(-20px); }
+    20% { transform: translateY(20px); }
+    30% { transform: translateY(-15px); }
+    40% { transform: translateY(15px); }
+    50% { transform: translateY(-10px); }
+    60% { transform: translateY(10px); }
+    70% { transform: translateY(-5px); }
+    80% { transform: translateY(5px); }
+    90% { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+}

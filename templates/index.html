@@ -104,9 +104,9 @@
             <!-- Daily Quote with Lucky Number Feature -->
             <div class="daily-quote-container" id="daily-quote-container">
                 <div class="daily-quote">{{ daily_quote }}</div>
-                <span class="lucky-icon">✨</span>
-                <div class="lucky-tooltip">點我抽幸運號碼</div>
+                <span class="lucky-seal">福</span>
             </div>
+            <div class="lucky-hint" id="lucky-hint">點擊驚喜</div>
         </div>
 
         <!-- Footer -->
@@ -315,22 +315,48 @@
             });
         }
 
-        // Lucky Number Feature
+        // Lucky Number Feature with Slot Machine Animation
         const quoteContainer = document.getElementById('daily-quote-container');
         const luckyModal = document.getElementById('lucky-modal');
         const luckyNum1 = document.getElementById('lucky-num-1');
         const luckyNum2 = document.getElementById('lucky-num-2');
         const luckyCloseBtn = document.getElementById('lucky-close');
+        const luckyHint = document.getElementById('lucky-hint');
         let autoCloseTimer;
+        let hasInteracted = false;
 
         function generateLuckyNumber() {
             return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
         }
 
+        function animateSlotMachine(element, finalNumber) {
+            element.classList.add('animating');
+            let counter = 0;
+            const interval = setInterval(() => {
+                element.textContent = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                counter++;
+                if (counter >= 10) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        element.textContent = finalNumber;
+                        element.classList.remove('animating');
+                    }, 100);
+                }
+            }, 100);
+        }
+
         function showLuckyNumbers() {
-            luckyNum1.textContent = generateLuckyNumber();
-            luckyNum2.textContent = generateLuckyNumber();
+            if (!hasInteracted) {
+                luckyHint.classList.add('hidden');
+                hasInteracted = true;
+            }
+            const num1 = generateLuckyNumber();
+            const num2 = generateLuckyNumber();
             luckyModal.classList.add('show');
+            setTimeout(() => {
+                animateSlotMachine(luckyNum1, num1);
+                animateSlotMachine(luckyNum2, num2);
+            }, 200);
             clearTimeout(autoCloseTimer);
             autoCloseTimer = setTimeout(() => luckyModal.classList.remove('show'), 10000);
         }
