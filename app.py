@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from lunar_python import Lunar, Solar
 from datetime import datetime
 import random
+import os
 
 app = Flask(__name__)
 
@@ -155,6 +156,15 @@ def index():
     }
 
     return render_template('index.html', **context)
+
+# PWA Routes
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('.', 'manifest.json', mimetype='application/manifest+json')
+
+@app.route('/sw.js')
+def service_worker():
+    return send_from_directory('.', 'sw.js', mimetype='application/javascript')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
