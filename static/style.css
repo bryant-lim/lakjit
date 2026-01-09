@@ -1030,6 +1030,7 @@ body.night-mode .lucky-number-modal h3 {
         padding: 12px 20px;
     }
 }
+
 /* ============================================
    ENHANCED LUCKY NUMBER FEATURE
    ============================================ */
@@ -1048,8 +1049,15 @@ body.night-mode .lucky-number-modal h3 {
 }
 
 @keyframes shimmer {
-    0%, 100% { background-position: -200% 0; }
-    50% { background-position: 200% 0; }
+
+    0%,
+    100% {
+        background-position: -200% 0;
+    }
+
+    50% {
+        background-position: 200% 0;
+    }
 }
 
 /* Red Seal Icon (福) */
@@ -1112,17 +1120,49 @@ body.night-mode .lucky-number-modal h3 {
 }
 
 @keyframes slotMachine {
-    0% { transform: translateY(0); }
-    10% { transform: translateY(-20px); }
-    20% { transform: translateY(20px); }
-    30% { transform: translateY(-15px); }
-    40% { transform: translateY(15px); }
-    50% { transform: translateY(-10px); }
-    60% { transform: translateY(10px); }
-    70% { transform: translateY(-5px); }
-    80% { transform: translateY(5px); }
-    90% { transform: translateY(-2px); }
-    100% { transform: translateY(0); }
+    0% {
+        transform: translateY(0);
+    }
+
+    10% {
+        transform: translateY(-20px);
+    }
+
+    20% {
+        transform: translateY(20px);
+    }
+
+    30% {
+        transform: translateY(-15px);
+    }
+
+    40% {
+        transform: translateY(15px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(10px);
+    }
+
+    70% {
+        transform: translateY(-5px);
+    }
+
+    80% {
+        transform: translateY(5px);
+    }
+
+    90% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
 
 /* Mobile - Red Seal on New Line */
@@ -1131,15 +1171,18 @@ body.night-mode .lucky-number-modal h3 {
         flex-wrap: wrap;
         justify-content: center;
     }
-    
+
     .lucky-seal {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 4px;
         flex-basis: 100%;
         display: flex;
         justify-content: center;
     }
-    
+
     .lucky-hint {
         margin-top: 8px;
     }
