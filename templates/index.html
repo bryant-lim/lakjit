@@ -114,6 +114,17 @@
         </div>
     </div>
 
+    <!-- PWA Install Button -->
+    <button id="install-button" class="install-button">
+        <span>📱</span>
+        <span>安裝應用</span>
+    </button>
+
+    <!-- iOS Install Tooltip -->
+    <div id="ios-tooltip" class="ios-install-tooltip">
+        點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
+    </div>
+
     <!-- Share as Image Button -->
     <button class="share-button" id="share-button" aria-label="Share as image" title="Share as image">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -243,6 +254,52 @@
                 document.body.removeChild(shareContainer);
             }
         });
+
+        // PWA Installation
+        let deferredPrompt;
+        const installButton = document.getElementById('install-button');
+        const iosTooltip = document.getElementById('ios-tooltip');
+
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            installButton.style.display = 'none';
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.classList.add('show');
+        });
+
+        installButton.addEventListener('click', async () => {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            if (isIOS && isSafari) {
+                iosTooltip.classList.add('show');
+                setTimeout(() => { iosTooltip.classList.remove('show'); }, 5000);
+                return;
+            }
+
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            installButton.classList.remove('show');
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installButton.classList.remove('show');
+            deferredPrompt = null;
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((reg) => console.log('SW registered:', reg.scope))
+                    .catch((err) => console.log('SW failed:', err));
+            });
+        }
     </script>
     </body>
 
