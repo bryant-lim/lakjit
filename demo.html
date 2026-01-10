@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakjit Demo - Theme & Language Toggles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-image: url('static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #1A1A1A;
+            overflow: hidden;
+            transition: background-image 0.5s ease, color 0.5s ease;
+            min-height: 100vh;
+        }
+
+        body.night-mode {
+            background-image: url('static/background-night.jpg');
+            color: #E0E0E0;
+        }
+
+        /* Toggle Controls Container */
+        .toggle-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .toggle-button {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #000000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            min-width: 48px;
+            min-height: 36px;
+        }
+
+        .toggle-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        body.night-mode .toggle-button {
+            background-color: rgba(40, 40, 40, 0.9);
+            border-color: rgba(224, 224, 224, 0.2);
+            color: #E0E0E0;
+        }
+
+        .language-toggle .toggle-text {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .language-toggle[data-lang="cn"] .toggle-text::before {
+            content: "→ ";
+            color: #8B4513;
+        }
+
+        .language-toggle[data-lang="en"] .toggle-text::after {
+            content: " ←";
+            color: #8B4513;
+        }
+
+        .theme-toggle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            padding: 0;
+        }
+
+        .theme-icon {
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .footer {
+            font-size: 0.875rem;
+            font-weight: 300;
+            margin-top: auto;
+        }
+
+        .date-header {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .big-date {
+            font-size: 10rem;
+            font-weight: 900;
+            line-height: 1;
+            margin: 20px 0;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .weekday {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .divider {
+            width: 100%;
+            max-width: 600px;
+            height: 3px;
+            background-color: currentColor;
+            margin: 1.5rem 0;
+            opacity: 0.3;
+        }
+
+        .daily-quote {
+            font-size: 3.2rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: font-size 0.5s ease, letter-spacing 0.5s ease;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .activities {
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 20px 0;
+        }
+
+        .countdown-timer {
+            font-size: 19px;
+            font-weight: 400;
+            margin: 20px 0;
+            opacity: 0.9;
+            transition: all 0.5s ease;
+        }
+
+        .countdown-numbers {
+            font-weight: 700;
+            font-size: 21px;
+        }
+
+        @media (max-width: 768px) {
+            .big-date {
+                font-size: 6rem;
+            }
+
+            .daily-quote {
+                font-size: 2rem;
+            }
+
+            .toggle-controls {
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme & Language Toggles -->
+    <div class="toggle-controls">
+        <!-- Language Toggle -->
+        <button class="toggle-button language-toggle" id="language-toggle" aria-label="Switch Language">
+            <span class="toggle-text">CN | EN</span>
+        </button>
+
+        <!-- Theme Toggle (Day/Night) -->
+        <button class="toggle-button theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+            <span class="theme-icon sun-icon">☀️</span>
+            <span class="theme-icon moon-icon" style="display: none;">🌙</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="countdown-timer">
+                <span id="countdown-text">距離農曆新年還有
+                    <span class="countdown-numbers">37</span> 天
+                    <span class="countdown-numbers">5</span> 小時
+                    <span class="countdown-numbers">43</span> 分
+                    <span class="countdown-numbers">12</span> 秒
+                </span>
+            </div>
+
+            <div class="date-header">2026 年 1 月</div>
+            <div class="big-date">10</div>
+            <div class="weekday">星期五 | 十二月十一</div>
+
+            <div class="divider"></div>
+
+            <div class="activities">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2390EE90'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-weight='bold'%3E宜%3C/text%3E%3C/svg%3E"
+                    alt="宜" style="height: 28px; width: 28px; vertical-align: middle; margin: 0 6px;">
+                祭祀，沐浴，掃舍 |
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23DC143C'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-weight='bold'%3E忌%3C/text%3E%3C/svg%3E"
+                    alt="忌" style="height: 28px; width: 28px; vertical-align: middle; margin: 0 6px;">
+                嫁娶，安葬，動土
+            </div>
+
+            <div class="daily-quote">馬到成功</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">馬年🐴 2026</div>
+    </div>
+
+    <script>
+        // English translations for February 2026
+        const englishQuotes = {
+            '2026-02-01': 'Let your spirit soar this New Year',
+            '2026-02-02': 'Wishing you swift success today',
+            '2026-02-03': 'Let prosperity find your doorstep',
+            '2026-02-10': 'May your path stay clear and wise'
+        };
+
+        // For demo, use Feb 2 quote
+        const demoEnglishQuote = 'Wishing you swift success today';
+        const originalQuote = '馬到成功';
+
+        // Initialize from localStorage or defaults
+        let currentLang = localStorage.getItem('lakjit-language') || 'cn';
+        let currentTheme = localStorage.getItem('lakjit-theme') || 'day';
+
+        // DOM Elements
+        const languageToggle = document.getElementById('language-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const dailyQuoteEl = document.querySelector('.daily-quote');
+        const countdownTextEl = document.querySelector('#countdown-text');
+        const dateHeaderEl = document.querySelector('.date-header');
+        const weekdayEl = document.querySelector('.weekday');
+
+        // Store originals
+        const originalDateHeader = dateHeaderEl.textContent;
+        const originalWeekday = weekdayEl.textContent;
+
+        // Translation mappings
+        const weekdayMap = {
+            '星期一': 'Monday', '星期二': 'Tuesday', '星期三': 'Wednesday',
+            '星期四': 'Thursday', '星期五': 'Friday', '星期六': 'Saturday', '星期日': 'Sunday'
+        };
+
+        const monthMap = {
+            '1': 'January', '2': 'February', '3': 'March', '4': 'April',
+            '5': 'May', '6': 'June', '7': 'July', '8': 'August',
+            '9': 'September', '10': 'October', '11': 'November', '12': 'December'
+        };
+
+        const lunarMonthMap = {
+            '一月': 'January', '二月': 'February', '三月': 'March', '四月': 'April',
+            '五月': 'May', '六月': 'June', '七月': 'July', '八月': 'August',
+            '九月': 'September', '十月': 'October', '十一月': 'November', '十二月': 'December'
+        };
+
+        // Helper function to convert Chinese day numerals
+        function convertChineseDayToNumber(chineseDay) {
+            const numeralMap = {
+                '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+                '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+                '初': 0, '廿': 20, '卅': 30
+            };
+
+            let result = 0;
+            let temp = 0;
+
+            for (let i = 0; i < chineseDay.length; i++) {
+                const char = chineseDay[i];
+
+                if (char === '初') continue;
+                else if (char === '十') {
+                    temp = (i === 0 || chineseDay[i - 1] === '初') ? 10 : temp * 10;
+                } else if (char === '廿') temp = 20;
+                else if (char === '卅') temp = 30;
+                else if (numeralMap[char]) {
+                    temp = (temp === 10 || temp === 20 || temp === 30) ? temp + numeralMap[char] : numeralMap[char];
+                }
+            }
+
+            result += temp;
+            return result || chineseDay;
+        }
+
+        // Language Toggle Function
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lakjit-language', lang);
+            languageToggle.setAttribute('data-lang', lang);
+
+            if (lang === 'en') {
+                // English mode
+                dailyQuoteEl.textContent = demoEnglishQuote;
+                dailyQuoteEl.style.fontSize = '2rem';
+                dailyQuoteEl.style.letterSpacing = '0.05em';
+                dailyQuoteEl.style.lineHeight = '1.4';
+                dailyQuoteEl.style.maxWidth = '600px';
+
+                // Translate date header
+                const yearMatch = originalDateHeader.match(/(\d+)\s*年/);
+                const monthMatch = originalDateHeader.match(/(\d+)\s*月/);
+                if (yearMatch && monthMatch) {
+                    dateHeaderEl.textContent = `${monthMap[monthMatch[1]]} ${yearMatch[1]}`;
+                }
+
+                // Translate weekday
+                const weekdayParts = originalWeekday.split('|');
+                if (weekdayParts.length === 2) {
+                    const chineseWeekday = weekdayParts[0].trim();
+                    const lunarDate = weekdayParts[1].trim();
+                    const englishWeekday = weekdayMap[chineseWeekday] || chineseWeekday;
+
+                    let englishLunarDate = lunarDate;
+                    for (const [cnMonth, enMonth] of Object.entries(lunarMonthMap)) {
+                        if (lunarDate.includes(cnMonth)) {
+                            const dayPart = lunarDate.replace(cnMonth, '');
+                            const dayNumber = convertChineseDayToNumber(dayPart);
+                            englishLunarDate = `Lunar ${enMonth} ${dayNumber}`;
+                            break;
+                        }
+                    }
+
+                    weekdayEl.textContent = `${englishWeekday} | ${englishLunarDate}`;
+                }
+
+                // Update countdown - CNY instead of Lunar New Year
+                countdownTextEl.innerHTML = 'CNY in <span class="countdown-numbers">37</span> days <span class="countdown-numbers">5</span> hrs <span class="countdown-numbers">43</span> min <span class="countdown-numbers">12</span> sec';
+            } else {
+                // Chinese mode
+                dailyQuoteEl.textContent = originalQuote;
+                dailyQuoteEl.style.fontSize = '3.2rem';
+                dailyQuoteEl.style.letterSpacing = '0.2em';
+                dailyQuoteEl.style.lineHeight = '1.2';
+                dailyQuoteEl.style.maxWidth = 'none';
+
+                dateHeaderEl.textContent = originalDateHeader;
+                weekdayEl.textContent = originalWeekday;
+                countdownTextEl.innerHTML = '距離農曆新年還有 <span class="countdown-numbers">37</span> 天 <span class="countdown-numbers">5</span> 小時 <span class="countdown-numbers">43</span> 分 <span class="countdown-numbers">12</span> 秒';
+            }
+        }
+
+        // Theme Toggle Function
+        function switchTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('lakjit-theme', theme);
+
+            if (theme === 'night') {
+                document.body.classList.add('night-mode');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                document.body.classList.remove('night-mode');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        // Event Listeners
+        languageToggle.addEventListener('click', () => {
+            const newLang = currentLang === 'cn' ? 'en' : 'cn';
+            switchLanguage(newLang);
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = currentTheme === 'day' ? 'night' : 'day';
+            switchTheme(newTheme);
+        });
+
+        // Initialize on page load
+        switchLanguage(currentLang);
+        switchTheme(currentTheme);
+    </script>
+</body>
+
+</html>
