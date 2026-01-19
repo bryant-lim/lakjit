@@ -64,9 +64,43 @@ def index():
             '捷報馬傳',    # Feb 27
             '順利馬年'     # Feb 28
         ]
+        
+        # English translations for February 2026
+        february_quotes_en = [
+            'Let your spirit soar this New Year',
+            'Wishing you swift success today',
+            'Let prosperity find your doorstep',
+            'May your journey be smooth and joyful',
+            'May strength and vitality be yours',
+            'May your heart be light this season',
+            'Keep moving with steady grace',
+            'Harmony to your home and family',
+            'Fortune favors the kind at heart',
+            'May your path stay clear and wise',
+            'Chase your dreams with bold energy',
+            'Welcome the morning with gratitude',
+            'May your friendships be enduring',
+            'Love is the greatest treasure',
+            'Peace and joy under the full moon',
+            'Gallop toward a brighter future',
+            'Success is waiting on the horizon',
+            'Every step brings you closer to plenty',
+            'A quiet mind finds the lucky path',
+            'Laughter to your happy generations',
+            'Good health is your true wealth',
+            'Overcome obstacles with poise',
+            'Keep your eyes open for luck',
+            'Fuel your passion for life',
+            'Peace, safety, and endless joy',
+            'Move forward with a steady gallop',
+            'Explore your vast potential today',
+            'May your heart be full and ready'
+        ]
+        
         # Use day of month (1-28) as direct index (subtract 1 for 0-based array)
         day_index = today.day - 1
         daily_quote = february_quotes[day_index] if day_index < len(february_quotes) else february_quotes[0]
+        daily_quote_en = february_quotes_en[day_index] if day_index < len(february_quotes_en) else february_quotes_en[0]
     else:
         # All other months: Use deterministic hash-based selection
         daily_quotes = [
@@ -94,11 +128,38 @@ def index():
             '百福駢臻', '千祥雲集', '萬事亨通', '億萬富翁', '財源滾滾'
         ]
         
+        # English translations for all quotes
+        daily_quotes_en = [
+            'Good fortune and joy', 'Great luck in all things', 'May your wishes come true', 'Five blessings upon you', 'Attract wealth and treasure',
+            'Harmony brings prosperity', 'Abundance of gold and jade', 'Flowers bloom with prosperity', 'Peace for nation and people', 'Good health to you',
+            'Steady steps upward', 'Great fortune and luck', 'Wealth flowing in', 'Prosperity and fortune', 'Abundance year after year',
+            'Dragon-horse spirit', 'Good fortune overhead', 'Lucky stars shine bright', 'Everything as you wish', 'Smooth in all matters',
+            'Peace and happiness', 'Family joy together', 'Fortune and longevity', 'Blessings like the East Sea', 'Longevity like South Mountain',
+            'Always smiling', 'Forever young', 'Bright future ahead', 'Splendid prospects', 'Journey of 10,000 miles',
+            'Smooth sailing', 'Immediate success', 'Achievement and fame', 'Top of the list', 'Outstanding excellence',
+            'Academic progress', 'Talented and wise', 'Learned and scholarly', 'Full of knowledge', 'Vast learning and talent',
+            'Career success', 'Soaring high', 'Rising steadily', 'Ascending swiftly', 'Thriving and prospering',
+            'Wealth pouring in', 'Prosperous fortune', 'Business thriving', 'Goods flowing like wheels', 'Customers like clouds',
+            'Harmony makes prosperity', 'Family peace and safety', 'Joy of kinship', 'Harmonious happiness', 'Blissful fulfillment',
+            'Century of happiness', 'Together till old age', 'United hearts forever', 'Harmony of instruments', 'Phoenix pairs in harmony',
+            'Brimming with joy', 'Proud in spring breeze', 'Smiling with eyes open', 'Joy on the brows', 'Happiness fills the door',
+            'Everything renewed', 'Flourishing growth', 'Vigorous development', 'Changing daily', 'Advancing with times',
+            'Dragons soar tigers leap', 'Tiger power and might', 'Lively as dragon tiger', 'Dragon dance phoenix fly', 'Dragon phoenix auspicious',
+            'Purple energy from east', 'Auspicious energy thousand-fold', 'Lucky clouds surrounding', 'Fortune fills the hall', 'Joy reaches sky',
+            'Peace all seasons', 'Peace every year', 'Safe coming and going', 'Safe journey ahead', 'Bamboo brings peace',
+            'Lucky stars high', 'Fortune stars protect', 'Celebration with surplus', 'Lucky person heaven helps', 'Heaven-sent good match',
+            'Refreshed and joyful', 'Radiant spirit', 'Glowing vitality', 'Radiant appearance', 'Completely renewed',
+            'Auspicious as wished', 'Satisfying as desired', 'Victory in all things', 'Great luck in matters', 'Happy in everything',
+            'Smooth six six', 'Seven stars shine high', 'Wealth from eight directions', 'Nine nine unity', 'Perfect ten ten',
+            'Hundred blessings gather', 'Thousand fortunes collect', 'Success in all endeavors', 'Billionaire wealth', 'Wealth rolling in'
+        ]
+        
         # Deterministic quote selection based on current date
         date_string = f"{today.year}-{today.month}-{today.day}"
         hash_value = sum(ord(c) * (i + 1) for i, c in enumerate(date_string))
         quote_index = hash_value % len(daily_quotes)
         daily_quote = daily_quotes[quote_index]
+        daily_quote_en = daily_quotes_en[quote_index]
 
     # Lunar date formatting - use numeric month
     lunar_month_num = lunar.getMonth()
@@ -142,8 +203,11 @@ def index():
         'day': f"{current_date.day:02d}",  # Zero-padded day
         'weekday_zh': weekday_zh,
         'daily_quote': daily_quote,
+        'daily_quote_en': daily_quote_en,
         'lunar_date': lunar_date,
         'lunar_date_short': lunar_date_short,
+        'lunar_month_num': lunar_month_num,  # Numeric lunar month for JS translation
+        'lunar_day_num': lunar.getDay(),  # Numeric lunar day for JS translation
         'good_for': lunar.getDayYi()[:3],  # Limit to 3 items
         'bad_for': lunar.getDayJi()[:3],   # Limit to 3 items
         'day_progress': round(day_progress, 2),  # Percentage of day elapsed

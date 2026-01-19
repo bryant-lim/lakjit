@@ -777,6 +777,184 @@ body.night-mode .share-button svg {
     }
 }
 
+/* ============================================
+   TEST NOTIFICATION BUTTON (Development Only)
+   ============================================ */
+
+/* Test Notification Button - Bottom Right, above Share Button */
+.test-notification-button {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    padding: 8px 16px;
+    background-color: rgba(255, 200, 100, 0.95);
+    border: 1px solid rgba(200, 150, 0, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #000000;
+    font-weight: 500;
+}
+
+.test-notification-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 210, 120, 0.95);
+}
+
+.test-notification-button:active {
+    transform: scale(0.95);
+}
+
+/* Night Mode Test Button */
+body.night-mode .test-notification-button {
+    background-color: rgba(255, 180, 80, 0.9);
+    border-color: rgba(200, 140, 0, 0.3);
+    color: #000000;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .test-notification-button {
+        bottom: 70px;
+        right: 15px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+/* ============================================
+   NOTIFICATION BANNER
+   ============================================ */
+
+/* Notification Banner - Top Center with Slide Down Animation */
+.notification-banner {
+    position: fixed;
+    top: -100px;
+    /* Start above viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    /* Above everything */
+    font-size: 0.95rem;
+    max-width: 90%;
+    white-space: nowrap;
+
+    /* Smooth transition for show/hide */
+    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Show state - slides down to visible position */
+.notification-banner.show {
+    top: 20px;
+    /* Visible position below top edge */
+}
+
+/* Notification Icon */
+.notification-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Notification Text */
+.notification-banner .notification-text {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: 0.02em;
+}
+
+/* Night Mode Notification Banner */
+body.night-mode .notification-banner {
+    background-color: rgba(40, 40, 40, 0.95);
+    border-color: rgba(224, 224, 224, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.night-mode .notification-banner .notification-text {
+    color: #E0E0E0;
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    .notification-banner {
+        font-size: 0.85rem;
+        padding: 10px 16px;
+        gap: 10px;
+    }
+
+    .notification-icon {
+        font-size: 1rem;
+    }
+}
+
+/* Test Banner Button Styles */
+.test-banner-button {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    /* Position on left side */
+    padding: 10px 18px;
+    background-color: rgba(100, 200, 255, 0.95);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #000000;
+    font-weight: 500;
+}
+
+.test-banner-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background-color: rgba(120, 210, 255, 0.95);
+}
+
+.test-banner-button:active {
+    transform: scale(0.95);
+}
+
+/* Night Mode Test Banner Button */
+body.night-mode .test-banner-button {
+    background-color: rgba(80, 180, 255, 0.9);
+    border-color: rgba(0, 140, 240, 0.3);
+    color: #000000;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .test-banner-button {
+        bottom: 70px;
+        left: 15px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+}
+
 /* Hidden Share Container (for image generation) */
 .share-container {
     position: fixed;

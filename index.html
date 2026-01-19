@@ -67,6 +67,20 @@
         <div class="petal petal-18"></div>
     </div>
 
+    <!-- Theme & Language Toggles -->
+    <div class="toggle-controls">
+        <!-- Language Toggle -->
+        <button class="toggle-button language-toggle" id="language-toggle" aria-label="Switch Language">
+            <span class="toggle-text">CN | EN</span>
+        </button>
+
+        <!-- Theme Toggle (Day/Night) -->
+        <button class="toggle-button theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+            <span class="theme-icon sun-icon">☀️</span>
+            <span class="theme-icon moon-icon" style="display: none;">🌙</span>
+        </button>
+    </div>
+
     <div class="container">
 
 
@@ -199,7 +213,8 @@
                 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六',
                 7: '七', 8: '八', 9: '九', 10: '十', 11: '十一', 12: '十二'
             };
-            const lunarMonthNum = lunar.getMonth();
+            lunarMonthNum = lunar.getMonth(); // Set global variable for language toggle
+            lunarDayNum = lunar.getDay(); // Set global variable for language toggle
             const lunarMonthChinese = monthChineseMap[lunarMonthNum] || lunarMonthNum;
             const lunarDay = lunar.getDayInChinese();
             document.getElementById('lunar-date').textContent = lunarMonthChinese + '月' + lunarDay;
@@ -335,6 +350,233 @@
             document.getElementById('progress-bar').style.width = progress + '%';
         }
 
+        // ============================================
+        // LANGUAGE & THEME TOGGLE FUNCTIONALITY
+        // ============================================
+
+        // Lunar date numeric values from updateCalendar
+        let lunarMonthNum = 1;
+        let lunarDayNum = 1;
+
+        // Zen quotes from JSON file
+        let zenQuotes = [];
+        let selectedZenQuote = '';
+
+        // Fetch Zen quotes from JSON
+        async function fetchQuotes() {
+            try {
+                const response = await fetch('static/quotes.json');
+                const data = await response.json();
+                zenQuotes = data.quotes;
+
+                // Deterministic quote selection based on current date
+                const today = new Date();
+                const dateString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+                const hashValue = dateString.split('').reduce((acc, char, i) => acc + char.charCodeAt(0) * (i + 1), 0);
+                const quoteIndex = hashValue % zenQuotes.length;
+                selectedZenQuote = zenQuotes[quoteIndex];
+            } catch (error) {
+                console.error('Failed to load quotes:', error);
+                selectedZenQuote = 'Peace and prosperity'; // Fallback
+            }
+        }
+
+        // Load quotes immediately
+        fetchQuotes();
+
+        // Store original Chinese content
+        let originalQuote = '';
+        let originalDateHeader = '';
+        let originalWeekday = '';
+
+        // Initialize from localStorage or defaults
+        let currentLang = localStorage.getItem('lakjit-language') || 'cn';
+        let currentTheme = localStorage.getItem('lakjit-theme') || 'auto';
+
+        // DOM Elements
+        const languageToggle = document.getElementById('language-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+
+        // Weekday translation mapping
+        const weekdayMap = {
+            '星期一': 'Monday',
+            '星期二': 'Tuesday',
+            '星期三': 'Wednesday',
+            '星期四': 'Thursday',
+            '星期五': 'Friday',
+            '星期六': 'Saturday',
+            '星期日': 'Sunday'
+        };
+
+        // Month translation mapping
+        const monthMap = {
+            '1': 'January', '2': 'February', '3': 'March', '4': 'April',
+            '5': 'May', '6': 'June', '7': 'July', '8': 'August',
+            '9': 'September', '10': 'October', '11': 'November', '12': 'December'
+        };
+
+        // Lunar month translation
+        const lunarMonthMap = {
+            '1': 'January', '2': 'February', '3': 'March', '4': 'April',
+            '5': 'May', '6': 'June', '7': 'July', '8': 'August',
+            '9': 'September', '10': 'October', '11': 'November', '12': 'December'
+        };
+
+        // Language Toggle Function
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lakjit-language', lang);
+            languageToggle.setAttribute('data-lang', lang);
+
+            const dailyQuoteEl = document.querySelector('.daily-quote');
+            const countdownTextEl = document.getElementById('countdown-text');
+            const dateHeaderEl = document.querySelector('.date-header');
+            const weekdayEl = document.querySelector('.weekday');
+
+            if (lang === 'en') {
+                // Switch to English - use Zen quote from JSON
+                if (selectedZenQuote) {
+                    dailyQuoteEl.textContent = selectedZenQuote;
+                    dailyQuoteEl.style.fontSize = '2rem'; // Smaller for English
+                    dailyQuoteEl.style.letterSpacing = '0.05em'; // Tighter spacing
+                    dailyQuoteEl.style.lineHeight = '1.4'; // Allow line breaks
+                    dailyQuoteEl.style.maxWidth = '600px'; // Constrain width for line breaks
+                }
+
+                // Translate date header
+                const yearMatch = originalDateHeader.match(/(\d+)\s*年/);
+                const monthMatch = originalDateHeader.match(/(\d+)\s*月/);
+                if (yearMatch && monthMatch) {
+                    const year = yearMatch[1];
+                    const month = monthMatch[1];
+                    dateHeaderEl.textContent = `${monthMap[month]} ${year}`;
+                }
+
+                // Translate weekday
+                const weekdayParts = originalWeekday.split('|');
+                if (weekdayParts.length === 2) {
+                    const chineseWeekday = weekdayParts[0].trim();
+                    const englishWeekday = weekdayMap[chineseWeekday] || chineseWeekday;
+                    const englishLunarMonth = lunarMonthMap[lunarMonthNum.toString()] || lunarMonthNum;
+                    const englishLunarDate = `Lunar ${englishLunarMonth} ${lunarDayNum}`;
+                    weekdayEl.textContent = `${englishWeekday} | ${englishLunarDate}`;
+                }
+
+                // Translate Yi/Ji labels to English
+                const jiIcon = document.querySelector('.activities img[alt="宜"]');
+                const yiIcon = document.querySelector('.activities img[alt="忌"]');
+                if (jiIcon) jiIcon.alt = 'Auspicious';
+                if (yiIcon) yiIcon.alt = 'Inauspicious';
+
+                // Update countdown text to English
+                const daysText = countdownTextEl.querySelector('#countdown-days');
+                const hoursText = countdownTextEl.querySelector('#countdown-hours');
+                const minutesText = countdownTextEl.querySelector('#countdown-minutes');
+                const secondsText = countdownTextEl.querySelector('#countdown-seconds');
+
+                countdownTextEl.innerHTML = `CNY in <span class="countdown-numbers" id="countdown-days">${daysText.textContent}</span> days <span class="countdown-numbers" id="countdown-hours">${hoursText.textContent}</span> hrs <span class="countdown-numbers" id="countdown-minutes">${minutesText.textContent}</span> min <span class="countdown-numbers" id="countdown-seconds">${secondsText.textContent}</span> sec`;
+
+                // Translate lucky hint text
+                const luckyHint = document.getElementById('lucky-hint');
+                if (luckyHint) luckyHint.textContent = 'Click for surprise';
+            } else {
+                // Switch to Chinese
+                dailyQuoteEl.textContent = originalQuote;
+                dailyQuoteEl.style.fontSize = '3.2rem'; // Original size
+                dailyQuoteEl.style.letterSpacing = '0.2em'; // Original spacing
+                dailyQuoteEl.style.lineHeight = '1.2'; // Reset
+                dailyQuoteEl.style.maxWidth = 'none'; // Reset
+
+                // Restore original date header
+                dateHeaderEl.textContent = originalDateHeader;
+
+                // Restore original weekday
+                weekdayEl.textContent = originalWeekday;
+
+                // Restore Yi/Ji labels to Chinese
+                const jiIcon = document.querySelector('.activities img[alt="Auspicious"]');
+                const yiIcon = document.querySelector('.activities img[alt="Inauspicious"]');
+                if (jiIcon) jiIcon.alt = '宜';
+                if (yiIcon) yiIcon.alt = '忌';
+
+                // Restore countdown text
+                const daysText = countdownTextEl.querySelector('#countdown-days');
+                const hoursText = countdownTextEl.querySelector('#countdown-hours');
+                const minutesText = countdownTextEl.querySelector('#countdown-minutes');
+                const secondsText = countdownTextEl.querySelector('#countdown-seconds');
+
+                countdownTextEl.innerHTML = `距離農曆新年還有 <span class="countdown-numbers" id="countdown-days">${daysText.textContent}</span> 天 <span class="countdown-numbers" id="countdown-hours">${hoursText.textContent}</span> 小時 <span class="countdown-numbers" id="countdown-minutes">${minutesText.textContent}</span> 分 <span class="countdown-numbers" id="countdown-seconds">${secondsText.textContent}</span> 秒`;
+
+                // Restore lucky hint text
+                const luckyHint = document.getElementById('lucky-hint');
+                if (luckyHint) luckyHint.textContent = '點擊驚喜';
+            }
+        }
+
+        // Theme Toggle Function
+        function switchTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('lakjit-theme', theme);
+
+            if (theme === 'night') {
+                document.body.classList.add('night-mode');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else if (theme === 'day') {
+                document.body.classList.remove('night-mode');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                // Auto mode - use time-based logic
+                checkNightModeForToggle();
+            }
+        }
+
+        // Check night mode for theme toggle (doesn't change icons)
+        function checkNightModeForToggle() {
+            const now = new Date();
+            const hour = now.getHours();
+            const isNight = hour >= 20 || hour < 7;
+
+            if (isNight) {
+                document.body.classList.add('night-mode');
+            } else {
+                document.body.classList.remove('night-mode');
+            }
+        }
+
+        // Event Listeners for toggles
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => {
+                const newLang = currentLang === 'cn' ? 'en' : 'cn';
+                switchLanguage(newLang);
+            });
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (currentTheme === 'auto' || currentTheme === 'day') {
+                    switchTheme('night');
+                } else {
+                    switchTheme('day');
+                }
+            });
+        }
+
+        // Initialize language and theme on page load (after calendar is updated)
+        setTimeout(() => {
+            // Store original content after calendar is loaded
+            originalQuote = document.querySelector('.daily-quote').textContent;
+            originalDateHeader = document.querySelector('.date-header').textContent;
+            originalWeekday = document.querySelector('.weekday').textContent;
+
+            // Apply saved preferences
+            switchLanguage(currentLang);
+            switchTheme(currentTheme);
+        }, 100);
+
         // Client-side night mode detection
         function checkNightMode() {
             const now = new Date();
@@ -356,6 +598,9 @@
         function checkLunarNotification() {
             // 2026 Lunar Calendar: 初一 (Chu 1) and 初十五 (Chu 15) dates
             const lunarDates = [
+                { date: '2026-01-03', type: '初十五' },
+                { date: '2026-01-19', type: '初一' },
+                { date: '2026-02-02', type: '初十五' },
                 { date: '2026-02-17', type: '初一', name: 'CNY' },
                 { date: '2026-03-03', type: '初十五' },
                 { date: '2026-03-18', type: '初一' },
@@ -630,6 +875,17 @@
                     });
             });
         }
+
+        // Test Notification Button (for development)
+        document.getElementById('test-notification').addEventListener('click', () => {
+            // Clear any previous dismissal from localStorage
+            const testDate = '2026-02-17';
+            const storageKey = `lunar-notification-${testDate}`;
+            localStorage.removeItem(storageKey);
+
+            // Show test notification
+            showNotification('提醒：明天是初一 (測試通知)', testDate);
+        });
 
         // Lucky Number Feature with Slot Machine Animation
         const quoteContainer = document.getElementById('daily-quote-container');

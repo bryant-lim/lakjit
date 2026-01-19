@@ -142,6 +142,12 @@
         點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
     </div>
 
+    <!-- Notification Banner -->
+    <div id="notification-banner" class="notification-banner">
+        <span class="notification-icon">🔔</span>
+        <span class="notification-text">This is a notification banner with slide-down animation!</span>
+    </div>
+
     <!-- Lucky Number Modal -->
     <div id="lucky-modal" class="lucky-number-modal">
         <h3>🎉 今日幸運號碼 🎉</h3>
@@ -199,37 +205,38 @@
         // LANGUAGE & THEME TOGGLE FUNCTIONALITY
         // ============================================
 
-        // English translations for February 2026
-        const englishQuotes = {
-            '2026-02-01': 'Let your spirit soar this New Year',
-            '2026-02-02': 'Wishing you swift success today',
-            '2026-02-03': 'Let prosperity find your doorstep',
-            '2026-02-04': 'May your journey be smooth and joyful',
-            '2026-02-05': 'May strength and vitality be yours',
-            '2026-02-06': 'May your heart be light this season',
-            '2026-02-07': 'Keep moving with steady grace',
-            '2026-02-08': 'Harmony to your home and family',
-            '2026-02-09': 'Fortune favors the kind at heart',
-            '2026-02-10': 'May your path stay clear and wise',
-            '2026-02-11': 'Chase your dreams with bold energy',
-            '2026-02-12': 'Welcome the morning with gratitude',
-            '2026-02-13': 'May your friendships be enduring',
-            '2026-02-14': 'Love is the greatest treasure',
-            '2026-02-15': 'Peace and joy under the full moon',
-            '2026-02-16': 'Gallop toward a brighter future',
-            '2026-02-17': 'Success is waiting on the horizon',
-            '2026-02-18': 'Every step brings you closer to plenty',
-            '2026-02-19': 'A quiet mind finds the lucky path',
-            '2026-02-20': 'Laughter to your happy generations',
-            '2026-02-21': 'Good health is your true wealth',
-            '2026-02-22': 'Overcome obstacles with poise',
-            '2026-02-23': 'Keep your eyes open for luck',
-            '2026-02-24': 'Fuel your passion for life',
-            '2026-02-25': 'Peace, safety, and endless joy',
-            '2026-02-26': 'Move forward with a steady gallop',
-            '2026-02-27': 'Explore your vast potential today',
-            '2026-02-28': 'May your heart be full and ready'
-        };
+        // English quote from backend (fallback)
+        const englishQuoteFallback = '{{ daily_quote_en|safe }}';
+
+        // Lunar date numeric values from backend
+        const lunarMonthNum = {{ lunar_month_num }};
+        const lunarDayNum = {{ lunar_day_num }};
+
+        // Zen quotes from JSON file
+        let zenQuotes = [];
+        let selectedZenQuote = '';
+
+        // Fetch Zen quotes from JSON
+        async function fetchQuotes() {
+            try {
+                const response = await fetch('{{ url_for("static", filename="quotes.json") }}');
+                const data = await response.json();
+                zenQuotes = data.quotes;
+
+                // Deterministic quote selection based on current date
+                const today = new Date();
+                const dateString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+                const hashValue = dateString.split('').reduce((acc, char, i) => acc + char.charCodeAt(0) * (i + 1), 0);
+                const quoteIndex = hashValue % zenQuotes.length;
+                selectedZenQuote = zenQuotes[quoteIndex];
+            } catch (error) {
+                console.error('Failed to load quotes:', error);
+                selectedZenQuote = englishQuoteFallback; // Use fallback if fetch fails
+            }
+        }
+
+        // Load quotes immediately
+        fetchQuotes();
 
         // Store original Chinese content
         const originalQuote = document.querySelector('.daily-quote').textContent;
@@ -277,20 +284,27 @@
             '12': 'December'
         };
 
-        // Lunar month translation
+        // Lunar month translation - using NUMERIC keys to avoid Chinese character ambiguity
         const lunarMonthMap = {
-            '一月': 'January',
-            '二月': 'February',
-            '三月': 'March',
-            '四月': 'April',
-            '五月': 'May',
-            '六月': 'June',
-            '七月': 'July',
-            '八月': 'August',
-            '九月': 'September',
-            '十月': 'October',
-            '十一月': 'November',
-            '十二月': 'December'
+            '1': 'January',
+            '2': 'February',
+            '3': 'March',
+            '4': 'April',
+            '5': 'May',
+            '6': 'June',
+            '7': 'July',
+            '8': 'August',
+            '9': 'September',
+            '10': 'October',
+            '11': 'November',
+            '12': 'December'
+        };
+
+        // Chinese numeral to number conversion for lunar months
+        const chineseMonthToNumber = {
+            '一月': '1', '二月': '2', '三月': '3', '四月': '4',
+            '五月': '5', '六月': '6', '七月': '7', '八月': '8',
+            '九月': '9', '十月': '10', '十一月': '11', '十二月': '12'
         };
 
         // Language Toggle Function
@@ -305,13 +319,9 @@
             const weekdayEl = document.querySelector('.weekday');
 
             if (lang === 'en') {
-                // Switch to English
-                const today = new Date();
-                const dateKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-                const englishQuote = englishQuotes[dateKey];
-
-                if (englishQuote) {
-                    dailyQuoteEl.textContent = englishQuote;
+                // Switch to English - use Zen quote from JSON
+                if (selectedZenQuote) {
+                    dailyQuoteEl.textContent = selectedZenQuote;
                     dailyQuoteEl.style.fontSize = '2rem'; // Smaller for English
                     dailyQuoteEl.style.letterSpacing = '0.05em'; // Tighter spacing
                     dailyQuoteEl.style.lineHeight = '1.4'; // Allow line breaks
@@ -331,22 +341,12 @@
                 const weekdayParts = originalWeekday.split('|');
                 if (weekdayParts.length === 2) {
                     const chineseWeekday = weekdayParts[0].trim();
-                    const lunarDate = weekdayParts[1].trim();
 
                     const englishWeekday = weekdayMap[chineseWeekday] || chineseWeekday;
 
-                    // Parse lunar date (e.g., "十二月十一" to "Lunar December 11")
-                    let englishLunarDate = lunarDate;
-                    for (const [cnMonth, enMonth] of Object.entries(lunarMonthMap)) {
-                        if (lunarDate.includes(cnMonth)) {
-                            // Extract the day part
-                            const dayPart = lunarDate.replace(cnMonth, '');
-                            // Convert Chinese numerals to Arabic (simplified - handles common cases)
-                            const dayNumber = convertChineseDayToNumber(dayPart);
-                            englishLunarDate = `Lunar ${enMonth} ${dayNumber}`;
-                            break;
-                        }
-                    }
+                    // Use numeric lunar month and day from backend
+                    const englishLunarMonth = lunarMonthMap[lunarMonthNum.toString()] || lunarMonthNum;
+                    const englishLunarDate = `Lunar ${englishLunarMonth} ${lunarDayNum}`;
 
                     weekdayEl.textContent = `${englishWeekday} | ${englishLunarDate}`;
                 }
@@ -364,6 +364,10 @@
                 const secondsText = countdownTextEl.querySelector('#countdown-seconds');
 
                 countdownTextEl.innerHTML = `CNY in <span class="countdown-numbers" id="countdown-days">${daysText.textContent}</span> days <span class="countdown-numbers" id="countdown-hours">${hoursText.textContent}</span> hrs <span class="countdown-numbers" id="countdown-minutes">${minutesText.textContent}</span> min <span class="countdown-numbers" id="countdown-seconds">${secondsText.textContent}</span> sec`;
+
+                // Translate lucky hint text
+                const luckyHint = document.getElementById('lucky-hint');
+                if (luckyHint) luckyHint.textContent = 'Click for surprise';
             } else {
                 // Switch to Chinese
                 dailyQuoteEl.textContent = originalQuote;
@@ -391,6 +395,10 @@
                 const secondsText = countdownTextEl.querySelector('#countdown-seconds');
 
                 countdownTextEl.innerHTML = `距離農曆新年還有 <span class="countdown-numbers" id="countdown-days">${daysText.textContent}</span> 天 <span class="countdown-numbers" id="countdown-hours">${hoursText.textContent}</span> 小時 <span class="countdown-numbers" id="countdown-minutes">${minutesText.textContent}</span> 分 <span class="countdown-numbers" id="countdown-seconds">${secondsText.textContent}</span> 秒`;
+
+                // Restore lucky hint text
+                const luckyHint = document.getElementById('lucky-hint');
+                if (luckyHint) luckyHint.textContent = '點擊驚喜';
             }
         }
 
@@ -665,6 +673,92 @@
         luckyModal.addEventListener('click', (e) => {
             if (e.target === luckyModal) closeLuckyNumbers();
         });
+
+        // ============================================
+        // NOTIFICATION BANNER AUTO-DISPLAY LOGIC
+        // ============================================
+
+        const testBannerButton = document.getElementById('test-banner-button');
+        const notificationBanner = document.getElementById('notification-banner');
+        const notificationText = notificationBanner.querySelector('.notification-text');
+        let bannerTimeout;
+
+        // Function to show notification banner with a message
+        function showNotificationBanner(message) {
+            // Clear any existing timeout
+            if (bannerTimeout) clearTimeout(bannerTimeout);
+
+            // Update message
+            notificationText.textContent = message;
+
+            // Show banner with animation
+            notificationBanner.classList.add('show');
+
+            // Auto-hide after 5 seconds
+            bannerTimeout = setTimeout(() => {
+                notificationBanner.classList.remove('show');
+            }, 5000);
+        }
+
+        // Check if we should show notification based on lunar date
+        function checkLunarNotification() {
+            const currentLunarDay = lunarDayNum;
+
+            // Calculate days until next 初一 (day 1) or 十五 (day 15)
+            let daysUntilEvent = 0;
+            let eventName = '';
+
+            // Check for 初一 (day 1)
+            if (currentLunarDay === 30 || currentLunarDay === 29) {
+                // Tomorrow or day after is 初一
+                daysUntilEvent = currentLunarDay === 30 ? 1 : 2;
+                eventName = currentLang === 'cn' ? '初一' : 'Lunar 1st';
+            }
+            // Check for 十五 (day 15)
+            else if (currentLunarDay === 14 || currentLunarDay === 13) {
+                daysUntilEvent = 15 - currentLunarDay;
+                eventName = currentLang === 'cn' ? '十五' : 'Lunar 15th';
+            }
+
+            // Show notification if within 2 days
+            if (daysUntilEvent > 0 && daysUntilEvent <= 2) {
+                const daysText = currentLang === 'cn' ?
+                    (daysUntilEvent === 1 ? '明天' : '後天') :
+                    (daysUntilEvent === 1 ? 'tomorrow' : 'in 2 days');
+
+                const message = currentLang === 'cn' ?
+                    `提醒：${daysText}是${eventName}` :
+                    `Reminder: ${eventName} ${daysText}`;
+
+                // Show banner after a short delay to ensure page is loaded
+                setTimeout(() => showNotificationBanner(message), 1000);
+            }
+        }
+
+        // Test button click handler
+        testBannerButton.addEventListener('click', () => {
+            const message = currentLang === 'cn' ?
+                '這是測試通知橫幅！' :
+                'This is a test notification banner!';
+            showNotificationBanner(message);
+        });
+
+        // Allow manual close by clicking the banner
+        notificationBanner.addEventListener('click', () => {
+            notificationBanner.classList.remove('show');
+            if (bannerTimeout) clearTimeout(bannerTimeout);
+        });
+
+        // Check for notifications on page load
+        checkLunarNotification();
+
+        // Re-check when language changes (update existing switchLanguage function)
+        const originalSwitchLanguage = switchLanguage;
+        switchLanguage = function (lang) {
+            originalSwitchLanguage(lang);
+            // Re-check notification after language change
+            setTimeout(() => checkLunarNotification(), 100);
+        };
     </script>
     </body>
 
