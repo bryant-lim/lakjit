@@ -481,6 +481,16 @@
                 // Translate lucky hint text
                 const luckyHint = document.getElementById('lucky-hint');
                 if (luckyHint) luckyHint.textContent = 'Click for surprise';
+
+                // Translate Lucky Number Modal
+                const luckyModalTitle = document.querySelector('#lucky-modal h3');
+                const luckyCloseBtn = document.getElementById('lucky-close');
+                if (luckyModalTitle) luckyModalTitle.textContent = '🎉 Today\'s Lucky Numbers 🎉';
+                if (luckyCloseBtn) luckyCloseBtn.textContent = 'Close';
+
+                // Translate Footer
+                const footer = document.querySelector('.footer');
+                if (footer) footer.textContent = 'Year of the Horse 🐴 2026';
             } else {
                 // Switch to Chinese
                 dailyQuoteEl.textContent = originalQuote;
@@ -512,6 +522,16 @@
                 // Restore lucky hint text
                 const luckyHint = document.getElementById('lucky-hint');
                 if (luckyHint) luckyHint.textContent = '點擊驚喜';
+
+                // Restore Lucky Number Modal
+                const luckyModalTitle = document.querySelector('#lucky-modal h3');
+                const luckyCloseBtn = document.getElementById('lucky-close');
+                if (luckyModalTitle) luckyModalTitle.textContent = '🎉 今日幸運號碼 🎉';
+                if (luckyCloseBtn) luckyCloseBtn.textContent = '關閉';
+
+                // Restore Footer
+                const footer = document.querySelector('.footer');
+                if (footer) footer.textContent = '馬年🐴 2026';
             }
         }
 

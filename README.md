@@ -233,6 +233,6 @@ For questions or feedback, please open an issue on GitHub.
 
 ---
 
-**Version**: 5.0  
-**Last Updated**: January 9, 2026  
+**Version**: 6.0  
+**Last Updated**: February 16, 2026  
 **Status**: Active Development
