@@ -148,6 +148,16 @@
         <span class="notification-text">This is a notification banner with slide-down animation!</span>
     </div>
 
+    <!-- Festive Popup (CNY 2026) -->
+    <div id="festive-popup" class="festive-popup-overlay">
+        <div class="festive-popup-content">
+            <span class="festive-popup-decoration">🧧</span>
+            <div class="festive-popup-title">新年快樂</div>
+            <div class="festive-popup-message">馬年行大運</div>
+            <button id="festive-popup-close" class="festive-popup-close-btn">謝主隆恩</button>
+        </div>
+    </div>
+
     <!-- Lucky Number Modal -->
     <div id="lucky-modal" class="lucky-number-modal">
         <h3>🎉 今日幸運號碼 🎉</h3>
@@ -771,6 +781,31 @@
 
         // Check for notifications on page load
         checkLunarNotification();
+
+        // ============================================
+        // FESTIVE POPUP LOGIC
+        // ============================================
+        const festivePopup = document.getElementById('festive-popup');
+        const festivePopupClose = document.getElementById('festive-popup-close');
+
+        // Show popup on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                festivePopup.classList.add('show');
+            }, 500); // Small delay for impact
+        });
+
+        // Close popup
+        festivePopupClose.addEventListener('click', () => {
+            festivePopup.classList.remove('show');
+        });
+
+        // Close on clicking outside
+        festivePopup.addEventListener('click', (e) => {
+            if (e.target === festivePopup) {
+                festivePopup.classList.remove('show');
+            }
+        });
 
         // Re-check when language changes (update existing switchLanguage function)
         const originalSwitchLanguage = switchLanguage;

@@ -148,6 +148,16 @@
         點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
     </div>
 
+    <!-- Festive Popup (CNY 2026) -->
+    <div id="festive-popup" class="festive-popup-overlay">
+        <div class="festive-popup-content">
+            <span class="festive-popup-decoration">🧧</span>
+            <div class="festive-popup-title">新年快樂</div>
+            <div class="festive-popup-message">馬年行大運</div>
+            <button id="festive-popup-close" class="festive-popup-close-btn">謝主隆恩</button>
+        </div>
+    </div>
+
     <!-- Lucky Number Modal -->
     <div id="lucky-modal" class="lucky-number-modal">
         <h3>🎉 今日幸運號碼 🎉</h3>
@@ -191,6 +201,24 @@
 
             // Setup notification close button
             document.getElementById('notification-close').addEventListener('click', dismissNotification);
+
+            // Festive Popup Logic
+            const festivePopup = document.getElementById('festive-popup');
+            if (festivePopup) {
+                setTimeout(() => {
+                    festivePopup.classList.add('show');
+                }, 500);
+
+                document.getElementById('festive-popup-close').addEventListener('click', () => {
+                    festivePopup.classList.remove('show');
+                });
+
+                festivePopup.addEventListener('click', (e) => {
+                    if (e.target === festivePopup) {
+                        festivePopup.classList.remove('show');
+                    }
+                });
+            }
         });
 
         // Update calendar with current date

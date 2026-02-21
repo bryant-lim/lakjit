@@ -1481,3 +1481,95 @@ body.night-mode .lucky-number-modal h3 {
         margin-top: 8px;
     }
 }
+
+/* ============================================
+   FESTIVE POPUP (CNY 2026)
+   ============================================ */
+
+.festive-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    /* Higher than everything else */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.festive-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.festive-popup-content {
+    background-color: #D32F2F;
+    /* Red background */
+    color: #FFFFFF;
+    /* White text */
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    max-width: 90%;
+    width: 400px;
+    position: relative;
+    border: 2px solid #FFD700;
+    /* Gold border for festivity */
+    transform: scale(0.8);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.festive-popup-overlay.show .festive-popup-content {
+    transform: scale(1);
+}
+
+.festive-popup-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.festive-popup-message {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+}
+
+.festive-popup-close-btn {
+    background-color: #FFFFFF;
+    color: #D32F2F;
+    border: none;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.festive-popup-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.festive-popup-close-btn:active {
+    transform: translateY(1px);
+}
+
+/* Decorations */
+.festive-popup-decoration {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
