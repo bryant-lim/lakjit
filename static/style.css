@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Noto Sans TC', sans-serif;
-    background-image: url('/static/background.jpg');
+    background-image: url('/static/background-1.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1572,4 +1572,211 @@ body.night-mode .lucky-number-modal h3 {
     font-size: 3rem;
     margin-bottom: 1rem;
     display: block;
+}
+/* ============================================
+   HOLIDAY FEATURE
+   ============================================ */
+
+/* Holiday Hint below Countdown */
+.holiday-hint {
+    font-size: 1.25rem;
+    color: #000000;
+    margin-top: 4px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    opacity: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    animation: fadeInUp 1s ease-out;
+    letter-spacing: 0.5px;
+}
+
+body.night-mode .holiday-hint {
+    color: #FFFFFF;
+    font-weight: 900;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0,0,0,0.9);
+}
+
+/* Holiday Trigger in Footer */
+.holiday-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 10px;
+    padding: 2px 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.holiday-trigger:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+body.night-mode .holiday-trigger {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.night-mode .holiday-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Holiday Modal Styles */
+.holiday-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 450px;
+    max-height: 80vh;
+    background: #F5F5DC;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.holiday-modal.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.holiday-modal-header {
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.holiday-modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.holiday-modal-body {
+    padding: 10px 20px;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+
+.holiday-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.holiday-modal-body::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+.holiday-month-group {
+    margin-bottom: 20px;
+}
+
+.holiday-month-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8B4513;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.2);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.holiday-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+}
+
+.holiday-item:last-child {
+    border-bottom: none;
+}
+
+.holiday-info {
+    text-align: left;
+}
+
+.holiday-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.holiday-date {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.mandatory-badge {
+    font-size: 0.65rem;
+    background-color: #DC143C;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Night Mode Holiday Modal */
+body.night-mode .holiday-modal {
+    background: #2C2C2C;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #E0E0E0;
+}
+
+body.night-mode .holiday-modal-header {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.night-mode .holiday-modal-header h3,
+body.night-mode .holiday-name {
+    color: #E0E0E0;
+}
+
+body.night-mode .holiday-month-title {
+    color: #D2B48C;
+    border-color: rgba(210, 180, 140, 0.3);
+}
+
+body.night-mode .holiday-date {
+    color: #AAA;
+}
+
+body.night-mode .holiday-item {
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .holiday-modal {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    .holiday-name {
+        font-size: 0.9rem;
+    }
 }

@@ -95,6 +95,7 @@
                     <span class="countdown-numbers" id="countdown-seconds">0</span> 秒
                 </span>
             </div>
+            <div id="holiday-hint" class="holiday-hint"></div>
 
             <!-- Date Header -->
             <div class="date-header"><span id="year">2026</span> 年 <span id="month">1</span> 月</div>
@@ -122,7 +123,13 @@
         </div>
 
         <!-- Footer -->
-        <div class="footer">馬年🐴 2026</div>
+        <!-- Footer -->
+        <div class="footer">
+            <span id="footer-year">馬年🐴 2026</span>
+            <span class="holiday-trigger" id="holiday-trigger" role="button" tabindex="0" aria-label="View holidays">
+                🗓️ <span id="holiday-trigger-text">公假</span>
+            </span>
+        </div>
     </div>
 
     <!-- Day Progress Bar -->
@@ -130,11 +137,10 @@
         <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
 
-    <!-- Lunar Notification Banner -->
-    <div class="lunar-notification" id="lunar-notification" style="display: none;">
-        <img src="static/dark-incense.png" alt="incense" class="incense-icon" id="incense-icon">
-        <span class="notification-text" id="notification-text"></span>
-        <button class="notification-close" id="notification-close" aria-label="Close notification">×</button>
+    <!-- Notification Banner -->
+    <div id="notification-banner" class="notification-banner">
+        <span class="notification-icon">🔔</span>
+        <span class="notification-text"></span>
     </div>
 
     <!-- PWA Install Button -->
@@ -148,16 +154,9 @@
         點擊 Safari 的「分享」按鈕 <span style="font-size: 16px;">⎋</span>，然後選擇「加入主畫面」
     </div>
 
-    <!-- Festive Popup (CNY 2026) -->
-    <div id="festive-popup" class="festive-popup-overlay">
-        <div class="festive-popup-content">
-            <span class="festive-popup-decoration">🧧</span>
-            <div class="festive-popup-title">新年快樂</div>
-            <div class="festive-popup-message">馬年行大運</div>
-            <button id="festive-popup-close" class="festive-popup-close-btn">謝主隆恩</button>
-        </div>
-    </div>
 
+
+    <!-- Lucky Number Modal -->
     <!-- Lucky Number Modal -->
     <div id="lucky-modal" class="lucky-number-modal">
         <h3>🎉 今日幸運號碼 🎉</h3>
@@ -166,6 +165,17 @@
             <div class="lucky-number" id="lucky-num-2">0000</div>
         </div>
         <button class="lucky-close-btn" id="lucky-close">關閉</button>
+    </div>
+
+    <!-- Holiday Modal -->
+    <div id="holiday-modal" class="holiday-modal">
+        <div class="holiday-modal-header">
+            <h3 id="holiday-modal-title">2026 馬來西亞公假</h3>
+            <button class="notification-close" id="holiday-modal-close">×</button>
+        </div>
+        <div class="holiday-modal-body" id="holiday-modal-body">
+            <!-- Holidays will be injected here -->
+        </div>
     </div>
 
     <!-- Share as Image Button -->
@@ -179,6 +189,29 @@
     </button>
 
     <script>
+        let allHolidays = [];
+        const holidayTranslation = {
+            "New Year's Day": "元旦",
+            "Thaipusam": "大寶森節",
+            "Federal Territory Day": "聯邦直轄區日",
+            "Thaipusam (in lieu)": "大寶森節 (補假)",
+            "Chinese New Year": "農曆新年",
+            "Chinese New Year Holiday": "農曆新年假期",
+            "Nuzul Al-Quran Day": "可蘭經降世日",
+            "Hari Raya Aidilfitri": "開齋節",
+            "Hari Raya Aidilfitri Holiday": "開齋節假期",
+            "Labour Day": "勞動節",
+            "Hari Raya Haji": "哈芝節",
+            "Wesak Day": "衛塞節",
+            "Birthday of SPB Yang di Pertuan Agong": "最高元首誕辰",
+            "Awal Muharram": "回曆新年",
+            "Maulidur Rasul": "穆罕默德誕辰",
+            "National Day": "國慶日",
+            "Malaysia Day": "馬來西亞日",
+            "Deepavali": "屠妖節",
+            "Deepavali (in lieu)": "屠妖節 (補假)",
+            "Christmas Day": "聖誕節"
+        };
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
             updateCalendar();
@@ -202,23 +235,7 @@
             // Setup notification close button
             document.getElementById('notification-close').addEventListener('click', dismissNotification);
 
-            // Festive Popup Logic
-            const festivePopup = document.getElementById('festive-popup');
-            if (festivePopup) {
-                setTimeout(() => {
-                    festivePopup.classList.add('show');
-                }, 500);
 
-                document.getElementById('festive-popup-close').addEventListener('click', () => {
-                    festivePopup.classList.remove('show');
-                });
-
-                festivePopup.addEventListener('click', (e) => {
-                    if (e.target === festivePopup) {
-                        festivePopup.classList.remove('show');
-                    }
-                });
-            }
         });
 
         // Update calendar with current date
@@ -349,7 +366,7 @@
 
             if (distance < 0) {
                 // After CNY: Show greeting message
-                document.getElementById('countdown-text').textContent = 'Lak-Jit恭祝大家 恭喜發財！萬事如意！馬年行大運';
+                document.getElementById('countdown-text').textContent = '';
                 document.getElementById('countdown-days').textContent = '';
                 document.getElementById('countdown-hours').textContent = '';
                 document.getElementById('countdown-minutes').textContent = '';
@@ -367,6 +384,8 @@
             document.getElementById('countdown-minutes').textContent = minutes;
             document.getElementById('countdown-seconds').textContent = seconds;
         }
+
+
 
         // Update day progress bar
         function updateDayProgress() {
@@ -517,8 +536,16 @@
                 if (luckyCloseBtn) luckyCloseBtn.textContent = 'Close';
 
                 // Translate Footer
-                const footer = document.querySelector('.footer');
-                if (footer) footer.textContent = 'Year of the Horse 🐴 2026';
+                // Translate Footer
+                const footerYear = document.getElementById('footer-year');
+                if (footerYear) footerYear.textContent = 'Year of the Horse 🐴 2026';
+
+                // Translate Holiday UI
+                const holidayTriggerText = document.getElementById('holiday-trigger-text');
+                const holidayModalTitle = document.getElementById('holiday-modal-title');
+                if (holidayTriggerText) holidayTriggerText.textContent = 'Holidays';
+                if (holidayModalTitle) holidayModalTitle.textContent = '2026 Malaysia Holidays';
+                updateHolidayDisplay();
             } else {
                 // Switch to Chinese
                 dailyQuoteEl.textContent = originalQuote;
@@ -558,8 +585,16 @@
                 if (luckyCloseBtn) luckyCloseBtn.textContent = '關閉';
 
                 // Restore Footer
-                const footer = document.querySelector('.footer');
-                if (footer) footer.textContent = '馬年🐴 2026';
+                // Restore Footer
+                const footerYear = document.getElementById('footer-year');
+                if (footerYear) footerYear.textContent = '馬年🐴 2026';
+
+                // Restore Holiday UI
+                const holidayTriggerText = document.getElementById('holiday-trigger-text');
+                const holidayModalTitle = document.getElementById('holiday-modal-title');
+                if (holidayTriggerText) holidayTriggerText.textContent = '公假';
+                if (holidayModalTitle) holidayModalTitle.textContent = '2026 馬來西亞公假';
+                updateHolidayDisplay();
             }
         }
 
@@ -623,6 +658,9 @@
             // Apply saved preferences
             switchLanguage(currentLang);
             switchTheme(currentTheme);
+
+            // Initialize Holidays
+            fetchHolidays();
         }, 100);
 
         // Client-side night mode detection
@@ -760,7 +798,7 @@
                 shareContainer.style.color = '#E0E0E0';
                 shareContainer.style.filter = 'brightness(0.6)';
             } else {
-                shareContainer.style.backgroundImage = "url('static/background.jpg')";
+                shareContainer.style.backgroundImage = "url('static/background-1.jpg')";
                 shareContainer.style.color = '#000000';
             }
 
@@ -1003,6 +1041,198 @@
         luckyCloseBtn.addEventListener('click', closeLuckyNumbers);
         luckyModal.addEventListener('click', (e) => {
             if (e.target === luckyModal) closeLuckyNumbers();
+        });
+
+        // ============================================
+        // NOTIFICATION BANNER & FESTIVE POPUP LOGIC
+        // ============================================
+        const notificationBanner = document.getElementById('notification-banner');
+        let bannerTimeout;
+
+        function showNotificationBanner(message) {
+            if (!notificationBanner) return;
+            const notificationText = notificationBanner.querySelector('.notification-text');
+            if (bannerTimeout) clearTimeout(bannerTimeout);
+            if (notificationText) notificationText.textContent = message;
+            notificationBanner.classList.add('show');
+            bannerTimeout = setTimeout(() => {
+                notificationBanner.classList.remove('show');
+            }, 5000);
+        }
+
+        function checkLunarNotification() {
+            if (typeof lunarDayNum === 'undefined') return;
+            const currentLunarDay = lunarDayNum;
+            let daysUntilEvent = 0;
+            let eventName = '';
+
+            if (currentLunarDay === 30 || currentLunarDay === 29) {
+                daysUntilEvent = currentLunarDay === 30 ? 1 : 2;
+                eventName = currentLang === 'cn' ? '初一' : 'Lunar 1st';
+            } else if (currentLunarDay === 14 || currentLunarDay === 13) {
+                daysUntilEvent = 15 - currentLunarDay;
+                eventName = currentLang === 'cn' ? '十五' : 'Lunar 15th';
+            }
+
+            if (daysUntilEvent > 0 && daysUntilEvent <= 2) {
+                const daysText = currentLang === 'cn' ? (daysUntilEvent === 1 ? '明天' : '後天') : (daysUntilEvent === 1 ? 'tomorrow' : 'in 2 days');
+                const message = currentLang === 'cn' ? `提醒：${daysText}是${eventName}` : `Reminder: ${eventName} ${daysText}`;
+                setTimeout(() => showNotificationBanner(message), 1000);
+            }
+        }
+
+
+
+        if (notificationBanner) {
+            notificationBanner.addEventListener('click', () => {
+                notificationBanner.classList.remove('show');
+                if (bannerTimeout) clearTimeout(bannerTimeout);
+            });
+        }
+
+
+
+        // Initialize Holidays Safely
+        try {
+            fetchHolidays();
+        } catch (e) {
+            console.error("Critical error starting holiday fetch:", e);
+        }
+
+        checkLunarNotification();
+
+        // ============================================
+        // HOLIDAY SYSTEM (MALAYSIA 2026)
+        // ============================================
+
+        async function fetchHolidays() {
+            const hintEl = document.getElementById('holiday-hint');
+            if (hintEl) hintEl.textContent = currentLang === 'cn' ? '正在獲取公假資訊...' : 'Fetching holidays...';
+
+            const endpoints = [
+                "https://sabah-holiday.dydxsoft.my/api/kuala-lumpur/2026.json",
+                "https://m-public-holiday-api.vercel.app/api/kuala-lumpur/2026.json"
+            ];
+
+            for (const url of endpoints) {
+                try {
+                    console.log("Fetching from:", url);
+                    const response = await fetch(url, { timeout: 5000 });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    allHolidays = await response.json();
+                    updateHolidayDisplay();
+                    return; // Success!
+                } catch (error) {
+                    console.error(`Failed to fetch from ${url}:`, error);
+                }
+            }
+
+            if (hintEl) {
+                hintEl.innerHTML = currentLang === 'cn' ? 
+                    '暫時無法獲取公假 <span style="cursor:pointer;text-decoration:underline" onclick="fetchHolidays()">重試</span>' : 
+                    'Holiday info unavailable <span style="cursor:pointer;text-decoration:underline" onclick="fetchHolidays()">Retry</span>';
+            }
+        }
+
+        function updateHolidayDisplay() {
+            if (!allHolidays || allHolidays.length === 0) return;
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentDay = now.getDate();
+            const today = new Date(2026, currentMonth, currentDay);
+
+            console.log("Updating holidays. Today:", today.toDateString());
+
+            const monthMap = {
+                'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+                'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+            };
+
+            // Find upcoming holidays
+            const upcoming = allHolidays.filter(h => {
+                const parts = h.date.split(' ');
+                if (parts.length !== 2) return false;
+                const m = monthMap[parts[0]];
+                const d = parseInt(parts[1]);
+                const hDate = new Date(2026, m, d);
+                return hDate >= today;
+            });
+
+            console.log("Upcoming holidays found:", upcoming.length);
+
+            // Update Hint (Next Holiday)
+            const hintEl = document.getElementById('holiday-hint');
+            if (hintEl) {
+                if (upcoming.length > 0) {
+                    const next = upcoming[0];
+                    const name = currentLang === 'cn' ? (holidayTranslation[next.holiday_name] || next.holiday_name) : next.holiday_name;
+                    hintEl.textContent = currentLang === 'cn' ? `下一節日：${name} (${next.date})` : `Next Holiday: ${name} (${next.date})`;
+                } else {
+                    hintEl.textContent = currentLang === 'cn' ? '近期無公假' : 'No upcoming holidays';
+                }
+            }
+
+            // Populate Modal
+            const modalBody = document.getElementById('holiday-modal-body');
+            if (modalBody) {
+                modalBody.innerHTML = '';
+
+                const months = [...new Set(allHolidays.map(h => h.date.split(' ')[0]))];
+                
+                months.forEach(month => {
+                    const monthHolidays = allHolidays.filter(h => h.date.startsWith(month));
+                    if (monthHolidays.length === 0) return;
+
+                    const group = document.createElement('div');
+                    group.className = 'holiday-month-group';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'holiday-month-title';
+                    title.textContent = month;
+                    group.appendChild(title);
+
+                    monthHolidays.forEach(h => {
+                        const item = document.createElement('div');
+                        item.className = 'holiday-item';
+                        
+                        const name = currentLang === 'cn' ? (holidayTranslation[h.holiday_name] || h.holiday_name) : h.holiday_name;
+                        const parts = h.date.split(' ');
+                        const m = monthMap[parts[0]];
+                        const d = parseInt(parts[1]);
+                        const isUpcoming = new Date(2026, m, d) >= today;
+                        
+                        item.innerHTML = `
+                            <div class="holiday-info">
+                                <div class="holiday-name" style="${isUpcoming ? 'font-weight: 700;' : 'opacity: 0.6;'}">
+                                    ${name} ${h.is_mandatory ? '<span class="mandatory-badge">Gazetted</span>' : ''}
+                                </div>
+                                <div class="holiday-date">${h.date} (${h.day_of_week})</div>
+                            </div>
+                        `;
+                        group.appendChild(item);
+                    });
+                    
+                    modalBody.appendChild(group);
+                });
+            }
+        }
+
+        // Modal Controls
+        const holidayModal = document.getElementById('holiday-modal');
+        const holidayTrigger = document.getElementById('holiday-trigger');
+        const holidayClose = document.getElementById('holiday-modal-close');
+
+        if (holidayTrigger && holidayModal) {
+            holidayTrigger.addEventListener('click', () => holidayModal.classList.add('show'));
+            holidayTrigger.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    holidayModal.classList.add('show');
+                }
+            });
+        }
+        if (holidayClose) holidayClose.addEventListener('click', () => holidayModal.classList.remove('show'));
+        window.addEventListener('click', (e) => {
+            if (e.target === holidayModal) holidayModal.classList.remove('show');
         });
     </script>
 </body>

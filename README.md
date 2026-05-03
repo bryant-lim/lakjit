@@ -9,7 +9,7 @@ A beautiful, modern web application that displays traditional Chinese calendar i
 - **Lunar Calendar Integration**: Shows lunar month and day in Traditional Chinese
 - **Weekday Display**: Current day of the week in Chinese
 - **Chinese New Year Countdown**: Real-time countdown to CNY 2026 (Feb 17)
-  - After CNY: Displays festive greeting "Lak-Jit恭祝大家 恭喜發財！萬事如意！馬年行大運"
+  - After CNY: The countdown timer is removed
 
 ### Daily Auspicious Activities (宜忌)
 - **Yi (宜)**: 3 auspicious activities for the day
